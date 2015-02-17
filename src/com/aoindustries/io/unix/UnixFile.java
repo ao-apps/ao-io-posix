@@ -50,6 +50,8 @@ public class UnixFile {
 
 	/**
 	 * The minimum UID that is considered a normal user.
+	 * 
+	 * Note: Copied to LinuxServerAccount.java to avoid interproject dependency.
 	 */
 	public static final int MINIMUM_USER_UID = 500;
 
@@ -60,6 +62,8 @@ public class UnixFile {
 
 	/**
 	 * The UID of the root user.
+	 * 
+	 * Note: Copied to LinuxServerAccount.java to avoid interproject dependency.
 	 */
 	public static final int ROOT_UID = 0;
 
