@@ -224,7 +224,10 @@ public class UnixFile {
 	 */
 	public UnixFile(UnixFile parent, String path, boolean strict) throws IOException {
 		if(parent==null) throw new NullPointerException("parent is null");
-		if(strict && parent.exists() && !parent.isDirectory()) throw new IOException("parent is not a directory: " + parent.path);
+		if(strict) {
+			Stat parentStat = parent.getStat();
+			if(parentStat.exists() && !parentStat.isDirectory()) throw new IOException("parent is not a directory: " + parent.path);
+		}
 		if(parent.path.equals("/")) this.path=parent.path+path;
 		else this.path = parent.path + '/' + path;
 	}
