@@ -43,6 +43,10 @@ import java.util.Stack;
 /**
  * Access and modify all the Unix specific file attributes.  These updates are made using
  * a Linux shared library provided as a resource.  The source code is also supplied.
+ * <p>
+ * Note: The JVM must be in a single-byte locale, such as "C", "POSIX", or
+ * "en_US".  UnixFile makes this assumption in its JNI implementation.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */
