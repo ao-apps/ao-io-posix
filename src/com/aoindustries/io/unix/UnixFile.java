@@ -25,7 +25,6 @@ package com.aoindustries.io.unix;
 import com.aoindustries.io.FileUtils;
 import com.aoindustries.io.IoUtils;
 import com.aoindustries.util.BufferManager;
-import com.aoindustries.util.Stack;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +38,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  * Access and modify all the Unix specific file attributes.  These updates are made using
@@ -210,6 +210,13 @@ public class UnixFile {
 	private File file;
 	private UnixFile _parent;
 
+	private static String checkPath(String path) {
+		if(path.indexOf(0) != -1) {
+			throw new IllegalArgumentException("Must not contain the NULL character: " + path);
+		}
+		return path;
+	}
+
 	/**
 	 * Strictly requires the parent to be a directory if it exists.
 	 *
@@ -228,13 +235,16 @@ public class UnixFile {
 			Stat parentStat = parent.getStat();
 			if(parentStat.exists() && !parentStat.isDirectory()) throw new IOException("parent is not a directory: " + parent.path);
 		}
-		if(parent.path.equals("/")) this.path=parent.path+path;
-		else this.path = parent.path + '/' + path;
+		if(parent.path.equals("/")) {
+			this.path = checkPath(parent.path+path);
+		} else {
+			this.path = checkPath(parent.path + '/' + path);
+		}
 	}
 
 	public UnixFile(File file) {
 		if(file==null) throw new NullPointerException("file is null");
-		this.path = file.getPath();
+		this.path = checkPath(file.getPath());
 		this.file=file;
 	}
 
@@ -243,12 +253,15 @@ public class UnixFile {
 	}
 
 	public UnixFile(String path) {
-		this.path = path;
+		this.path = checkPath(path);
 	}
 
 	public UnixFile(String parent, String filename) {
-		if(parent.equals("/")) this.path=parent+filename;
-		else this.path = parent + '/' + filename;
+		if(parent.equals("/")) {
+			this.path = checkPath(parent+filename);
+		} else {
+			this.path = checkPath(parent + '/' + filename);
+		}
 	}
 
 	/**
