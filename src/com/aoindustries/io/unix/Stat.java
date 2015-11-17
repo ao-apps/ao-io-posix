@@ -34,7 +34,7 @@ import java.io.FileNotFoundException;
  */
 final public class Stat {
 
-    private UnixFile unixFile = null;
+    private UnixFile unixFile;
     private boolean exists;
     private long device;
     private long inode;
@@ -51,7 +51,7 @@ final public class Stat {
     private long changeTime;
 
     public Stat() {
-        reset();
+        // No need to reset the new object, since state already reset by JVM: reset();
     }
 
     /**
