@@ -92,10 +92,10 @@ JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_chown0
 /*
  * Class:     com_aoindustries_io_unix_UnixFile
  * Method:    getStat0
- * Signature: (Ljava/lang/String;Lcom/aoindustries/io/unix/Stat;)V
+ * Signature: (Ljava/lang/String;)Lcom/aoindustries/io/unix/Stat;
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_getStat0
-  (JNIEnv *, jobject, jstring, jobject);
+JNIEXPORT jobject JNICALL Java_com_aoindustries_io_unix_UnixFile_getStat0
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     com_aoindustries_io_unix_UnixFile

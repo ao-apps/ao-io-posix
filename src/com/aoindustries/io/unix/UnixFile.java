@@ -319,28 +319,17 @@ public class UnixFile {
 	private static native void chown0(String path, int uid, int gid) throws IOException;
 
 	/**
-	 * Stats the file.  Please consider calling getStat(Stat) to avoid memory allocation.
+	 * Stats the file.
 	 *
 	 * This method will follow symbolic links in the path but not a final symbolic link.
 	 */
 	public Stat getStat() throws IOException {
-		return getStat(null);
-	}
-
-	/**
-	 * Stats the file into the provided Stat buffer.  If no buffer is provided, a new one will be created.
-	 *
-	 * This method will follow symbolic links in the path but not a final symbolic link.
-	 */
-	public Stat getStat(Stat stat) throws IOException {
 		checkRead();
 		loadLibrary();
-		if(stat==null) stat=new Stat();
-		getStat0(path, stat);
-		return stat;
+		return getStat0(path);
 	}
 
-	private native void getStat0(String path, Stat stat) throws IOException;
+	private native Stat getStat0(String path) throws IOException;
 
 	/**
 	 * Compares this contents of this file to the contents of another file.
@@ -604,10 +593,9 @@ public class UnixFile {
 			}
 		}
 		// Set any necessary permissions from root to file's immediate parent while looking for symbolic links
-		Stat parentStat = new Stat();
 		while(!parents.isEmpty()) {
-			UnixFile parent=parents.pop();
-			parent.getStat(parentStat);
+			UnixFile parent = parents.pop();
+			Stat parentStat = parent.getStat();
 			long statMode = parentStat.getRawMode();
 			if(isSymLink(statMode)) throw new IOException("Symbolic link found in path: "+parent.path);
 			int uid=parentStat.getUid();
@@ -1246,10 +1234,9 @@ public class UnixFile {
 	 */
 	final public UnixFile mkdir(boolean makeParents, long mode) throws IOException {
 		if(makeParents) {
-			Stat stat = new Stat();
 			UnixFile dir=getParent();
 			Stack<UnixFile> neededParents=new Stack<UnixFile>();
-			while(!dir.isRootDirectory() && !dir.getStat(stat).exists()) {
+			while(!dir.isRootDirectory() && !dir.getStat().exists()) {
 				neededParents.push(dir);
 				dir=dir.getParent();
 			}
@@ -1269,10 +1256,9 @@ public class UnixFile {
 	 */
 	final public UnixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
 		if(makeParents) {
-			Stat stat = new Stat();
 			UnixFile dir=getParent();
 			Stack<UnixFile> neededParents=new Stack<UnixFile>();
-			while(!dir.isRootDirectory() && !dir.getStat(stat).exists()) {
+			while(!dir.isRootDirectory() && !dir.getStat().exists()) {
 				neededParents.push(dir);
 				dir=dir.getParent();
 			}
