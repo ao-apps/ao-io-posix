@@ -33,6 +33,26 @@ import java.io.FileNotFoundException;
  */
 public class Stat {
 
+	/**
+	 * A stat that represents a non-existant file.
+	 */
+	public static final Stat NOT_EXISTS = new Stat(
+		false,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+	);
+
 	private final boolean exists;
 	private final long device;
 	private final long inode;

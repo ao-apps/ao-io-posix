@@ -97,45 +97,54 @@ JNIEXPORT jobject JNICALL Java_com_aoindustries_io_unix_UnixFile_getStat0(JNIEnv
 				changeTime       = ((jlong)(buff->st_ctime))*1000;
 			} else if(errno==ENOENT || errno==ENOTDIR) {
 				exists           = JNI_FALSE;
-				device           = 0;
-				inode            = 0;
-				mode             = 0;
-				numberLinks      = 0;
-				uid              = 0;
-				gid              = 0;
-				deviceIdentifier = 0;
-				size             = 0;
-				blockSize        = 0;
-				blockCount       = 0;
-				accessTime       = 0;
-				modifyTime       = 0;
-				changeTime       = 0;
+				// Unused: device           = 0;
+				// Unused: inode            = 0;
+				// Unused: mode             = 0;
+				// Unused: numberLinks      = 0;
+				// Unused: uid              = 0;
+				// Unused: gid              = 0;
+				// Unused: deviceIdentifier = 0;
+				// Unused: size             = 0;
+				// Unused: blockSize        = 0;
+				// Unused: blockCount       = 0;
+				// Unused: accessTime       = 0;
+				// Unused: modifyTime       = 0;
+				// Unused: changeTime       = 0;
 			} else newExcCls=(*env)->FindClass(env, getErrorType(errno));
 			free(buff);
 			if(newExcCls==NULL) {
 				jclass statClass=(*env)->FindClass(env, "com/aoindustries/io/unix/Stat");
 				if(statClass!=NULL) {
-					jmethodID constructor = (*env)->GetMethodID(env, statClass, "<init>", "(ZJJJIIIJJIJJJJ)V");
-					if(constructor!=NULL) {
-						stat = (*env)->NewObject(
-							env,
-							statClass,
-							constructor,
-							exists,
-							device,
-							inode,
-							mode,
-							numberLinks,
-							uid,
-							gid,
-							deviceIdentifier,
-							size,
-							blockSize,
-							blockCount,
-							accessTime,
-							modifyTime,
-							changeTime
-						);
+					if(exists == JNI_FALSE) {
+						// not exists, return the static field
+						jfieldID field = (*env)->GetStaticFieldID(env, statClass, "NOT_EXISTS", "Lcom/aoindustries/io/unix/Stat;");
+						if(field!=NULL) {
+							stat = (*env)->GetStaticObjectField(env, statClass, field);
+						}
+					} else {
+						// exists, return a new object
+						jmethodID constructor = (*env)->GetMethodID(env, statClass, "<init>", "(ZJJJIIIJJIJJJJ)V");
+						if(constructor!=NULL) {
+							stat = (*env)->NewObject(
+								env,
+								statClass,
+								constructor,
+								exists,
+								device,
+								inode,
+								mode,
+								numberLinks,
+								uid,
+								gid,
+								deviceIdentifier,
+								size,
+								blockSize,
+								blockCount,
+								accessTime,
+								modifyTime,
+								changeTime
+							);
+						}
 					}
 				}
 			}
