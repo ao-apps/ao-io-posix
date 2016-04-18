@@ -8,9 +8,9 @@
 extern "C" {
 #endif
 #undef com_aoindustries_io_unix_UnixFile_MINIMUM_USER_UID
-#define com_aoindustries_io_unix_UnixFile_MINIMUM_USER_UID 500L
+#define com_aoindustries_io_unix_UnixFile_MINIMUM_USER_UID 1000L
 #undef com_aoindustries_io_unix_UnixFile_MINIMUM_USER_GID
-#define com_aoindustries_io_unix_UnixFile_MINIMUM_USER_GID 500L
+#define com_aoindustries_io_unix_UnixFile_MINIMUM_USER_GID 1000L
 #undef com_aoindustries_io_unix_UnixFile_ROOT_UID
 #define com_aoindustries_io_unix_UnixFile_ROOT_UID 0L
 #undef com_aoindustries_io_unix_UnixFile_ROOT_GID

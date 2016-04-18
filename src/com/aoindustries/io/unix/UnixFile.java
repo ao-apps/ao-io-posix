@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -57,12 +57,12 @@ public class UnixFile {
 	 * 
 	 * Note: Copied to LinuxServerAccount.java to avoid interproject dependency.
 	 */
-	public static final int MINIMUM_USER_UID = 500;
+	public static final int MINIMUM_USER_UID = 1000;
 
 	/**
 	 * The minimum GID that is considered a normal user.
 	 */
-	public static final int MINIMUM_USER_GID = 500;
+	public static final int MINIMUM_USER_GID = 1000;
 
 	/**
 	 * The UID of the root user.
