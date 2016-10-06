@@ -226,6 +226,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please call #UnixFile(UnixFile,String,boolean) to explicitly control whether strict parent checking is performed
 	 */
+	@Deprecated
 	public UnixFile(UnixFile parent, String path) throws IOException {
 		this(parent, path, true);
 	}
@@ -679,6 +680,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).exists()
 	 */
+	@Deprecated
 	final public boolean exists() throws IOException {
 		return getStat().exists();
 	}
@@ -690,6 +692,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getAccessTime()
 	 */
+	@Deprecated
 	final public long getAccessTime() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -703,6 +706,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(State).getBlockCount()
 	 */
+	@Deprecated
 	final public long getBlockCount() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -716,6 +720,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getBlockSize()
 	 */
+	@Deprecated
 	final public int getBlockSize() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -729,6 +734,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getChangeTime()
 	 */
+	@Deprecated
 	final public long getChangeTime() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -742,6 +748,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getDevice()
 	 */
+	@Deprecated
 	final public long getDevice() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -755,6 +762,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getDeviceIdentifier()
 	 */
+	@Deprecated
 	final public long getDeviceIdentifier() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -783,6 +791,7 @@ public class UnixFile {
 	 * @deprecated  the use of the word <code>filename</code> is misleading since it represents the entire path, please use <code>getPath()</code> instead.
 	 * @see  #getPath()
 	 */
+	@Deprecated
 	final public String getFilename() {
 		return path;
 	}
@@ -801,6 +810,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getGid()
 	 */
+	@Deprecated
 	final public int getGid() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -814,6 +824,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getInode()
 	 */
+	@Deprecated
 	final public long getInode() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -827,6 +838,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getNumberLinks()
 	 */
+	@Deprecated
 	final public int getLinkCount() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -840,6 +852,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getMode()
 	 */
+	@Deprecated
 	final public long getMode() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -881,6 +894,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getModeString()
 	 */
+	@Deprecated
 	final public String getModeString() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -974,6 +988,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getRawMode()
 	 */
+	@Deprecated
 	final public long getStatMode() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -987,6 +1002,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getModifyTime()
 	 */
+	@Deprecated
 	final public long getModifyTime() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1000,6 +1016,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getSize()
 	 */
+	@Deprecated
 	final public long getSize() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1016,6 +1033,7 @@ public class UnixFile {
 	 *
 	 * @see  #mktemp(String,boolean)
 	 */
+	@Deprecated
 	public static UnixFile mktemp(String template) throws IOException {
 		return mktemp(template, false);
 	}
@@ -1049,6 +1067,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).getUid()
 	 */
+	@Deprecated
 	public final int getUid() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1069,6 +1088,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).isBlockDevice()
 	 */
+	@Deprecated
 	final public boolean isBlockDevice() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1089,6 +1109,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).isCharacterDevice()
 	 */
+	@Deprecated
 	final public boolean isCharacterDevice() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1109,6 +1130,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).isDirectory()
 	 */
+	@Deprecated
 	final public boolean isDirectory() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1129,6 +1151,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).isFifo()
 	 */
+	@Deprecated
 	final public boolean isFifo() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1152,6 +1175,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).isRegularFile()
 	 */
+	@Deprecated
 	final public boolean isRegularFile() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1179,6 +1203,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).isSocket()
 	 */
+	@Deprecated
 	final public boolean isSocket() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1199,6 +1224,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  Please use getStat(Stat).isSymLink()
 	 */
+	@Deprecated
 	final public boolean isSymLink() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
@@ -1305,6 +1331,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
 	 */
+	@Deprecated
 	final public UnixFile setAccessTime(long atime) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
@@ -1320,6 +1347,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
 	 */
+	@Deprecated
 	final public UnixFile setGID(int gid) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
@@ -1349,6 +1377,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
 	 */
+	@Deprecated
 	final public UnixFile setModifyTime(long mtime) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
@@ -1364,6 +1393,7 @@ public class UnixFile {
 	 *
 	 * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
 	 */
+	@Deprecated
 	final public UnixFile setUID(int uid) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
