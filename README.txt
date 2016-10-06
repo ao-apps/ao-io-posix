@@ -1,4 +1,6 @@
-To provide patches or gain CVS access, please contact:
+Java interface to native Unix filesystem objects.
+
+For questions or support, please contact:
 
     AO Industries, Inc.
     7262 Bull Pen Cir
