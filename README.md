@@ -3,6 +3,7 @@ Java interface to native Unix filesystem objects.
 
 ## Project Links
 * [Project Home](https://www.aoindustries.com/ao-io-unix/)
+* [Changelog](https://www.aoindustries.com/ao-io-unix/changelog)
 * [API Docs](https://www.aoindustries.com/ao-io-unix/apidocs/)
 * [Maven Central Repository](https://search.maven.org/#search%7Cgav%7C1%7Cg:%22com.aoindustries%22%20AND%20a:%22ao-io-unix%22)
 * [GitHub](https://github.com/aoindustries/ao-io-unix)
