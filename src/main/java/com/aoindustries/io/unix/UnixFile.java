@@ -53,18 +53,6 @@ import java.util.Stack;
 public class UnixFile {
 
 	/**
-	 * The minimum UID that is considered a normal user.
-	 * 
-	 * Note: Copied to LinuxServerAccount.java to avoid interproject dependency.
-	 */
-	public static final int MINIMUM_USER_UID = 1000;
-
-	/**
-	 * The minimum GID that is considered a normal user.
-	 */
-	public static final int MINIMUM_USER_GID = 1000;
-
-	/**
 	 * The UID of the root user.
 	 * 
 	 * Note: Copied to LinuxServerAccount.java to avoid interproject dependency.
@@ -79,7 +67,7 @@ public class UnixFile {
 	/**
 	 * The mode mask for just the file permissions.
 	 */
-	public static final long PERMISSION_MASK=07777;
+	public static final long PERMISSION_MASK = 07777;
 
 	/**
 	 * World execute permissions.
@@ -156,7 +144,7 @@ public class UnixFile {
 	/**
 	 * The mode mask for just the file type.
 	 */
-	public static final long TYPE_MASK=0170000;
+	public static final long TYPE_MASK = 0170000;
 
 	/**
 	 * Is a FIFO.
@@ -380,8 +368,10 @@ public class UnixFile {
 	 * Compares this contents of this file to the contents of another file.
 	 *
 	 * This method will not follow any symbolic links and is not subject to race conditions.
+	 *
+	 * TODO: Java 1.8: Can do this in a pure Java way
 	 */
-	public boolean secureContentEquals(UnixFile otherUF) throws IOException {
+	public boolean secureContentEquals(UnixFile otherUF, int uid_min, int gid_min) throws IOException {
 		Stat stat = getStat();
 		if(!stat.isRegularFile()) throw new IOException("Not a regular file: "+path);
 		Stat otherStat = otherUF.getStat();
@@ -390,9 +380,9 @@ public class UnixFile {
 		if(size!=otherStat.getSize()) return false;
 		int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
 		if(buffSize<64) buffSize=64;
-		InputStream in1 = new BufferedInputStream(getSecureInputStream(), buffSize);
+		InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize);
 		try {
-			InputStream in2 = new BufferedInputStream(otherUF.getSecureInputStream(), buffSize);
+			InputStream in2 = new BufferedInputStream(otherUF.getSecureInputStream(uid_min, gid_min), buffSize);
 			try {
 				while(true) {
 					int b1=in1.read();
@@ -413,15 +403,17 @@ public class UnixFile {
 	 * Compares the contents of a file to a byte[].
 	 *
 	 * This method will not follow any symbolic links and is not subject to race conditions.
+	 *
+	 * TODO: Java 1.8: Can do this in a pure Java way
 	 */
-	public boolean secureContentEquals(byte[] otherFile) throws IOException {
+	public boolean secureContentEquals(byte[] otherFile, int uid_min, int gid_min) throws IOException {
 		Stat stat = getStat();
 		if(!stat.isRegularFile()) throw new IOException("Not a regular file: "+path);
 		long size=stat.getSize();
 		if(size!=otherFile.length) return false;
 		int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
 		if(buffSize<64) buffSize=64;
-		InputStream in1 = new BufferedInputStream(getSecureInputStream(), buffSize);
+		InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize);
 		try {
 			for(int c=0;c<otherFile.length;c++) {
 				int b1=in1.read();
@@ -569,6 +561,9 @@ public class UnixFile {
 		}
 	}
 
+	/**
+	 * TODO: Java 1.8: Can do this in a pure Java way
+	 */
 	public static class SecuredDirectory {
 		private final UnixFile directory;
 		private final long mode;
@@ -583,7 +578,14 @@ public class UnixFile {
 		}
 	}
 
-	final public void secureParents(List<SecuredDirectory> parentsChanged) throws IOException {
+	/**
+	 * TODO: Java 1.8: Can do this in a pure Java way
+	 */
+	final public void secureParents(
+		List<SecuredDirectory> parentsChanged,
+		int uid_min,
+		int gid_min
+	) throws IOException {
 		// Build a stack of all parents
 		Stack<UnixFile> parents=new Stack<UnixFile>();
 		{
@@ -602,22 +604,25 @@ public class UnixFile {
 			int uid=parentStat.getUid();
 			int gid=parentStat.getGid();
 			if(
-				uid>=MINIMUM_USER_UID
-				|| gid>=MINIMUM_USER_GID
+				uid >= uid_min
+				|| gid >= gid_min
 				|| (statMode&(OTHER_WRITE|SET_GID|SET_UID))!=0
 			) {
 				parentsChanged.add(new SecuredDirectory(parent, statMode, uid, gid));
 				parent
 					.setMode(statMode&(NOT_OTHER_WRITE & NOT_SET_GID & NOT_SET_UID))
 					.chown(
-						uid>=MINIMUM_USER_UID ? ROOT_UID : uid,
-						gid>=MINIMUM_USER_GID ? ROOT_GID : gid
+						uid >= uid_min ? ROOT_UID : uid,
+						gid >= gid_min ? ROOT_GID : gid
 					)
 				;
 			}
 		}
 	}
 
+	/**
+	 * TODO: Java 1.8: Can do this in a pure Java way
+	 */
 	final public void restoreParents(List<SecuredDirectory> parentsChanged) throws IOException {
 		for(int c=parentsChanged.size()-1;c>=0;c--) {
 			SecuredDirectory directory=parentsChanged.get(c);
@@ -635,12 +640,14 @@ public class UnixFile {
 	 * will recursively have its permissions reset, scans for symlinks, and deletes performed in such a way all
 	 * race conditions are avoided.  Finally, the parent directory permissions that were modified will be restored.
 	 *
+	 * TODO: Java 1.8: Can do this in a pure Java way
+	 *
 	 * @see  java.io.File#deleteRecursive
 	 */
-	final public void secureDeleteRecursive() throws IOException {
+	final public void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
 		try {
-			secureParents(parentsChanged);
+			secureParents(parentsChanged, uid_min, gid_min);
 			secureDeleteRecursive(this);
 		} finally {
 			restoreParents(parentsChanged);
@@ -904,11 +911,13 @@ public class UnixFile {
 	/**
 	 * Securely gets a <code>FileInputStream</code> to this file, temporarily performing permission
 	 * changes and ensuring that no symbolic links are anywhere in the path.
+	 *
+	 * TODO: Java 1.8: Can do this in a pure Java way
 	 */
-	final public FileInputStream getSecureInputStream() throws IOException {
+	final public FileInputStream getSecureInputStream(int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
 		try {
-			secureParents(parentsChanged);
+			secureParents(parentsChanged, uid_min, gid_min);
 
 			// Make sure the file does not exist
 			if(!getStat().isRegularFile()) throw new IOException("Not a regular file: "+path);
@@ -926,11 +935,13 @@ public class UnixFile {
 	 *
 	 * TODO: Consider the impact of using mktemp instead of secureParents/restoreParents because there
 	 *       is the possibility that permissions may not be restored if the JVM is shutdown at that moment.
+	 *
+	 * TODO: Java 1.8: Can do this in a pure Java way
 	 */
-	final public FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite) throws IOException {
+	final public FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
 		try {
-			secureParents(parentsChanged);
+			secureParents(parentsChanged, uid_min, gid_min);
 
 			// Make sure the file does not exist
 			Stat stat = getStat();
@@ -952,11 +963,13 @@ public class UnixFile {
 	/**
 	 * Securely gets a <code>RandomAccessFile</code> to this file, temporarily performing permission
 	 * changes and ensuring that no symbolic links are anywhere in the path.
+	 *
+	 * TODO: Java 1.8: Can do this in a pure Java way
 	 */
-	final public RandomAccessFile getSecureRandomAccessFile(String mode) throws IOException {
+	final public RandomAccessFile getSecureRandomAccessFile(String mode, int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
 		try {
-			secureParents(parentsChanged);
+			secureParents(parentsChanged, uid_min, gid_min);
 
 			// Make sure the file does not exist
 			if(!getStat().isRegularFile()) throw new IOException("Not a regular file: "+path);
