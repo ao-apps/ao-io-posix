@@ -51,23 +51,32 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{documented.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{documented.scm.url}"
-			>
-				<ul>
-					<li>
-						<p>
-							<code>UID_MIN</code> and <code>GID_MIN</code>, as found in <code>/etc/login.defs</code>,
-							is now set on a per-server basis.  Older servers keep this at 500 whereas newer
-							servers use the current default of 1000.
-						</p>
-						<ol>
-							<li>Removed <code>UnixFile.MINIMUM_USER_UID</code>.</li>
-							<li>Removed <code>UnixFile.MINIMUM_USER_GID</code>.</li>
-							<li>Have added <code>uid_min</code> and <code>gid_min</code> parameters to methods that used these constants.</li>
-						</ol>
-					</li>
-				</ul>
-			</changelog:release>
+			/>
 		</c:if>
+
+		<changelog:release
+			projectName="@{documented.name}"
+			version="2.0.0"
+			datePublished="2016-11-30T16:20:12-0600"
+			groupId="@{documented.groupId}"
+			artifactId="@{documented.artifactId}"
+			scmUrl="@{documented.scm.url}"
+		>
+			<ul>
+				<li>
+					<p>
+						<code>UID_MIN</code> and <code>GID_MIN</code>, as found in <code>/etc/login.defs</code>,
+						is now set on a per-server basis.  Older servers keep this at 500 whereas newer
+						servers use the current default of 1000.
+					</p>
+					<ol>
+						<li>Removed <code>UnixFile.MINIMUM_USER_UID</code>.</li>
+						<li>Removed <code>UnixFile.MINIMUM_USER_GID</code>.</li>
+						<li>Have added <code>uid_min</code> and <code>gid_min</code> parameters to methods that used these constants.</li>
+					</ol>
+				</li>
+			</ul>
+		</changelog:release>
 
 		<changelog:release
 			projectName="@{documented.name}"
