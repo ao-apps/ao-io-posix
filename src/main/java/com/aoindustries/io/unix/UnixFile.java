@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -472,37 +472,117 @@ public class UnixFile {
 	}
 
 	/**
+	 * The set of supported crypt algorithms.
+	 */
+	public enum CryptAlgorithm {
+
+		/**
+		 * @deprecated This is the old-school weakest form, do not use unless somehow absolutely required.
+		 */
+		@Deprecated
+		DES("", 2),
+
+		/**
+		 * @deprecated As of glibc 2.7, prefer the stronger {@link #SHA256} and {@link #SHA512} alternatives.
+		 */
+		@Deprecated
+		MD5("$1$", 8),
+
+		/**
+		 * SHA-256 algorithm requires glibc 2.7+.
+		 */
+		SHA256("$5$", 16),
+
+		/**
+		 * SHA-512 algorithm requires glibc 2.7+.
+		 */
+		SHA512("$6$", 16);
+
+		private final String saltPrefix;
+		private final int saltLength;
+
+		private CryptAlgorithm(String saltPrefix, int saltLength) {
+			this.saltPrefix = saltPrefix;
+			this.saltLength = saltLength;
+		}
+
+		public String getSaltPrefix() {
+			return saltPrefix;
+		}
+
+		/**
+		 * Gets the number of characters in the salt, not including the prefix.
+		 */
+		public int getSaltLength() {
+			return saltLength;
+		}
+
+		/**
+		 * Generates a random salt for this algorithm.
+		 */
+		public String generateSalt(Random random) {
+			StringBuilder salt = new StringBuilder(saltPrefix.length() + saltLength);
+			salt.append(saltPrefix);
+			for(int c = 0; c < saltLength; c++) {
+				int num = random.nextInt(64);
+				if(num < 10) salt.append((char)(num + '0'));
+				else if(num < 36) salt.append((char)(num - 10 + 'A'));
+				else if(num < 62) salt.append((char)(num - 36 + 'a'));
+				else if(num == 62) salt.append('.');
+				else salt.append('/');
+			}
+			return salt.toString();
+		}
+	}
+
+	/**
+	 * Hashes a password using the MD5 crypt algorithm and the internal random source.
+	 *
+	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoindustries.io.unix.UnixFile.CryptAlgorithm)} instead.
+	 */
+	@Deprecated
+	public static String crypt(String password) {
+		return crypt(password, CryptAlgorithm.MD5, random);
+	}
+
+	/**
+	 * Hashes a password using the MD5 crypt algorithm and the provided random source.
+	 *
+	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoindustries.io.unix.UnixFile.CryptAlgorithm, java.util.Random)} instead.
+	 */
+	@Deprecated
+	public static String crypt(String password, Random random) {
+		return crypt(password, CryptAlgorithm.MD5, random);
+	}
+
+	/**
+	 * Hashes a password using the provided crypt algorithm and the internal random source.
+	 */
+	public static String crypt(String password, CryptAlgorithm algorithm) {
+		return crypt(password, algorithm, random);
+	}
+
+	/**
+	 * Hashes a password using the provided crypt algorithm and the provided random source.
+	 */
+	public static String crypt(String password, CryptAlgorithm algorithm, Random random) {
+		return crypt(
+			password,
+			algorithm.generateSalt(random)
+		);
+	}
+
+	/**
 	 * crypt is not thread safe due to static data in the return value
 	 */
 	private static final Object cryptLock = new Object();
 
 	/**
-	 * Hashes a password using the MD5 crypt algorithm and the internal random source.
-	 */
-	public static String crypt(String password) {
-		return crypt(password, random);
-	}
-
-	/**
-	 * Hashes a password using the MD5 crypt algorithm and the provided random source.
-	 */
-	public static String crypt(String password, Random random) {
-		StringBuilder salt=new StringBuilder(11);
-		salt.append("$1$");
-		for(int c=0;c<8;c++) {
-			int num=random.nextInt(64);
-			if(num<10) salt.append((char)(num+'0'));
-			else if(num<36) salt.append((char)(num-10+'A'));
-			else if(num<62) salt.append((char)(num-36+'a'));
-			else if(num==62) salt.append('.');
-			else salt.append('/');
-		}
-		return crypt(password, salt.toString());
-	}
-
-	/**
-	 * Hashes a password using the provided salt.  If the salt starts with $1$ MD5 crypt will be used, otherwise
-	 * standard (not very secure) Unix crypt will be used.
+	 * Hashes a password using the provided salt.  The salt includes any
+	 * {@link CryptAlgorithm#getSaltPrefix() salt prefix} for the algorithm.
+	 * <p>
+	 * Please refer to <code>man 3 crypt</code> for more details.
+	 * </p>
 	 */
 	public static String crypt(String password, String salt) {
 		loadLibrary();
