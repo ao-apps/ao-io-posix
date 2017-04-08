@@ -1,6 +1,6 @@
 <!--
 ao-io-unix - Java interface to native Unix filesystem objects.
-Copyright (C) 2016  AO Industries, Inc.
+Copyright (C) 2016, 2017  AO Industries, Inc.
     support@aoindustries.com
     7262 Bull Pen Cir
     Mobile, AL 36695
@@ -36,7 +36,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:31:27-0500"
-		dateModified="2016-11-30T16:20:12-0600"
+		dateModified="2017-04-08T00:26:06-0500"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-unix:pom.version}" />
@@ -51,7 +51,17 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{documented.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{documented.scm.url}"
-			/>
+			>
+				<ul>
+					<li>Added support for glibc 2.7 sha-256 and sha-512 crypt algorithms.</li>
+					<li>Added <code>CryptAlgorithm</code> enum representing the supported algorithms.</li>
+					<li>
+						Added additional <code>CryptAlgorithm</code> parameter to <code>crypt</code> methods,
+						with old methods deprecated and still using <code>MD5</code> algorithm for compatibility.
+					</li>
+					<li>No change to native code; no compilation required.</li>
+				</ul>
+			</changelog:release>
 		</c:if>
 
 		<changelog:release
