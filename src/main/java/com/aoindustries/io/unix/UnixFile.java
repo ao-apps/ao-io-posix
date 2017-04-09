@@ -1139,7 +1139,7 @@ public class UnixFile {
 	 */
 	public static UnixFile mktemp(String template, boolean deleteOnExit) throws IOException {
 		try {
-			String path=template+"XXXXXX";
+			String path = template + "XXXXXXXXXX";
 			checkWrite(path);
 			loadLibrary();
 			UnixFile uf = new UnixFile(mktemp0(path));
