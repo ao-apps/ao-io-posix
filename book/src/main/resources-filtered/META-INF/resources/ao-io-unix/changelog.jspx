@@ -36,7 +36,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:31:27-0500"
-		dateModified="2017-04-08T00:26:06-0500"
+		dateModified="2017-07-13T19:57:25-0500"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-unix:pom.version}" />
@@ -60,6 +60,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 						with old methods deprecated and still using <code>MD5</code> algorithm for compatibility.
 					</li>
 					<li>No change to native code; no compilation required.</li>
+					<li>Updated dependencies.</li>
 				</ul>
 			</changelog:release>
 		</c:if>
