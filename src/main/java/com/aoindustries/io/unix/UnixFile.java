@@ -1122,13 +1122,18 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path but not final links.
 	 *
-	 * @deprecated  Please specify the deleteOnExit flag
-	 *
 	 * @see  #mktemp(String,boolean)
 	 */
-	@Deprecated
 	public static UnixFile mktemp(String template) throws IOException {
-		return mktemp(template, false);
+		try {
+			String path = template + "XXXXXXXXXX";
+			checkWrite(path);
+			loadLibrary();
+			return new UnixFile(mktemp0(path));
+		} catch(IOException err) {
+			System.err.println("UnixFile.mktemp: IOException: template="+template);
+			throw err;
+		}
 	}
 
 	/**
@@ -1136,19 +1141,15 @@ public class UnixFile {
 	 * needs to be secure, or at least have the sticky bit set.
 	 *
 	 * This method will follow symbolic links in the path but not final links.
+	 *
+	 * @deprecated  Please use <a href="https://aoindustries.com/ao-tempfiles/apidocs/com/aoindustries/tempfiles/TempFileContext.html">TempFileContext</a>
+	 *              as {@link File#deleteOnExit()} is prone to memory leaks in long-running applications.
 	 */
+	@Deprecated
 	public static UnixFile mktemp(String template, boolean deleteOnExit) throws IOException {
-		try {
-			String path = template + "XXXXXXXXXX";
-			checkWrite(path);
-			loadLibrary();
-			UnixFile uf = new UnixFile(mktemp0(path));
-			if(deleteOnExit) uf.getFile().deleteOnExit();
-			return uf;
-		} catch(IOException err) {
-			System.err.println("UnixFile.mktemp: IOException: template="+template);
-			throw err;
-		}
+		UnixFile uf = mktemp(template);
+		if(deleteOnExit) uf.getFile().deleteOnExit();
+		return uf;
 	}
 
 	private static native String mktemp0(String template) throws IOException;
