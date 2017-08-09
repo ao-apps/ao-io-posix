@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2008, 2009, 2010, 2011, 2013, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -53,7 +53,7 @@ public class FilesystemIteratorTestTODO extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		tempDir = UnixFile.mktemp("/tmp/FilesystemIteratorTest.", true);
+		tempDir = UnixFile.mktemp("/tmp/FilesystemIteratorTest.");
 		tempDir.delete();
 		tempDir.mkdir(false, 0700);
 		UnixFile tmp = new UnixFile(tempDir, "tmp", true).mkdir(false, 0755);
