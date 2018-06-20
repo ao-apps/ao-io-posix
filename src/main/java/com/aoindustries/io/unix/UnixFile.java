@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -369,7 +369,7 @@ public class UnixFile {
 	 *
 	 * This method will not follow any symbolic links and is not subject to race conditions.
 	 *
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	public boolean secureContentEquals(UnixFile otherUF, int uid_min, int gid_min) throws IOException {
 		Stat stat = getStat();
@@ -404,7 +404,7 @@ public class UnixFile {
 	 *
 	 * This method will not follow any symbolic links and is not subject to race conditions.
 	 *
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	public boolean secureContentEquals(byte[] otherFile, int uid_min, int gid_min) throws IOException {
 		Stat stat = getStat();
@@ -642,7 +642,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	public static class SecuredDirectory {
 		private final UnixFile directory;
@@ -659,7 +659,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public void secureParents(
 		List<SecuredDirectory> parentsChanged,
@@ -701,7 +701,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public void restoreParents(List<SecuredDirectory> parentsChanged) throws IOException {
 		for(int c=parentsChanged.size()-1;c>=0;c--) {
@@ -720,7 +720,7 @@ public class UnixFile {
 	 * will recursively have its permissions reset, scans for symlinks, and deletes performed in such a way all
 	 * race conditions are avoided.  Finally, the parent directory permissions that were modified will be restored.
 	 *
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 *
 	 * @see  java.io.File#deleteRecursive
 	 */
@@ -992,7 +992,7 @@ public class UnixFile {
 	 * Securely gets a <code>FileInputStream</code> to this file, temporarily performing permission
 	 * changes and ensuring that no symbolic links are anywhere in the path.
 	 *
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public FileInputStream getSecureInputStream(int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
@@ -1016,7 +1016,7 @@ public class UnixFile {
 	 * TODO: Consider the impact of using mktemp instead of secureParents/restoreParents because there
 	 *       is the possibility that permissions may not be restored if the JVM is shutdown at that moment.
 	 *
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
@@ -1044,7 +1044,7 @@ public class UnixFile {
 	 * Securely gets a <code>RandomAccessFile</code> to this file, temporarily performing permission
 	 * changes and ensuring that no symbolic links are anywhere in the path.
 	 *
-	 * TODO: Java 1.8: Can do this in a pure Java way
+	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public RandomAccessFile getSecureRandomAccessFile(String mode, int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
