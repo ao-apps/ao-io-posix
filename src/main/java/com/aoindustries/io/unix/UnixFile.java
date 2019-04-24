@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -334,21 +334,16 @@ public class UnixFile {
 		if(size!=otherStat.getSize()) return false;
 		int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
 		if(buffSize<64) buffSize=64;
-		InputStream in1 = new BufferedInputStream(new FileInputStream(getFile()), buffSize);
-		try {
-			InputStream in2 = new BufferedInputStream(new FileInputStream(otherUF.getFile()), buffSize);
-			try {
-				while(true) {
-					int b1=in1.read();
-					int b2=in2.read();
-					if(b1!=b2) return false;
-					if(b1==-1) break;
-				}
-			} finally {
-				in2.close();
+		try (
+			InputStream in1 = new BufferedInputStream(new FileInputStream(getFile()), buffSize);
+			InputStream in2 = new BufferedInputStream(new FileInputStream(otherUF.getFile()), buffSize)
+		) {
+			while(true) {
+				int b1=in1.read();
+				int b2=in2.read();
+				if(b1!=b2) return false;
+				if(b1==-1) break;
 			}
-		} finally {
-			in1.close();
 		}
 		return true;
 	}
@@ -380,21 +375,16 @@ public class UnixFile {
 		if(size!=otherStat.getSize()) return false;
 		int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
 		if(buffSize<64) buffSize=64;
-		InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize);
-		try {
-			InputStream in2 = new BufferedInputStream(otherUF.getSecureInputStream(uid_min, gid_min), buffSize);
-			try {
-				while(true) {
-					int b1=in1.read();
-					int b2=in2.read();
-					if(b1!=b2) return false;
-					if(b1==-1) break;
-				}
-			} finally {
-				in2.close();
+		try (
+			InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize);
+			InputStream in2 = new BufferedInputStream(otherUF.getSecureInputStream(uid_min, gid_min), buffSize)
+		) {
+			while(true) {
+				int b1=in1.read();
+				int b2=in2.read();
+				if(b1!=b2) return false;
+				if(b1==-1) break;
 			}
-		} finally {
-			in1.close();
 		}
 		return true;
 	}
@@ -413,15 +403,12 @@ public class UnixFile {
 		if(size!=otherFile.length) return false;
 		int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
 		if(buffSize<64) buffSize=64;
-		InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize);
-		try {
+		try (InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize)) {
 			for(int c=0;c<otherFile.length;c++) {
 				int b1=in1.read();
 				int b2=otherFile[c]&0xff;
 				if(b1!=b2) return false;
 			}
-		} finally {
-			in1.close();
 		}
 		return true;
 	}
@@ -452,17 +439,12 @@ public class UnixFile {
 			if(oExists) otherUF.delete();
 			otherUF.mkfifo(mode).chown(stat.getUid(), stat.getGid());
 		} else if(isRegularFile(mode)) {
-			InputStream in = new FileInputStream(getFile());
-			try {
-				OutputStream out = new FileOutputStream(otherUF.getFile());
-				try {
-					otherUF.setMode(mode).chown(stat.getUid(), stat.getGid());
-					IoUtils.copy(in, out);
-				} finally {
-					out.close();
-				}
-			} finally {
-				in.close();
+			try (
+				InputStream in = new FileInputStream(getFile());
+				OutputStream out = new FileOutputStream(otherUF.getFile())
+			) {
+				otherUF.setMode(mode).chown(stat.getUid(), stat.getGid());
+				IoUtils.copy(in, out);
 			}
 		} else if(isSocket(mode)) throw new IOException("Unable to copy socket: "+path);
 		else if(isSymLink(mode)) {
@@ -667,7 +649,7 @@ public class UnixFile {
 		int gid_min
 	) throws IOException {
 		// Build a stack of all parents
-		Stack<UnixFile> parents=new Stack<UnixFile>();
+		Stack<UnixFile> parents=new Stack<>();
 		{
 			UnixFile parent=getParent();
 			while(!parent.isRootDirectory()) {
@@ -725,7 +707,7 @@ public class UnixFile {
 	 * @see  java.io.File#deleteRecursive
 	 */
 	final public void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
-		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
+		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
 			secureDeleteRecursive(this);
@@ -995,7 +977,7 @@ public class UnixFile {
 	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public FileInputStream getSecureInputStream(int uid_min, int gid_min) throws IOException {
-		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
+		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
 
@@ -1019,7 +1001,7 @@ public class UnixFile {
 	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uid_min, int gid_min) throws IOException {
-		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
+		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
 
@@ -1047,7 +1029,7 @@ public class UnixFile {
 	 * Java 1.8: Can do this in a pure Java way
 	 */
 	final public RandomAccessFile getSecureRandomAccessFile(String mode, int uid_min, int gid_min) throws IOException {
-		List<SecuredDirectory> parentsChanged=new ArrayList<SecuredDirectory>();
+		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
 
@@ -1355,7 +1337,7 @@ public class UnixFile {
 	final public UnixFile mkdir(boolean makeParents, long mode) throws IOException {
 		if(makeParents) {
 			UnixFile dir=getParent();
-			Stack<UnixFile> neededParents=new Stack<UnixFile>();
+			Stack<UnixFile> neededParents=new Stack<>();
 			while(!dir.isRootDirectory() && !dir.getStat().exists()) {
 				neededParents.push(dir);
 				dir=dir.getParent();
@@ -1377,7 +1359,7 @@ public class UnixFile {
 	final public UnixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
 		if(makeParents) {
 			UnixFile dir=getParent();
-			Stack<UnixFile> neededParents=new Stack<UnixFile>();
+			Stack<UnixFile> neededParents=new Stack<>();
 			while(!dir.isRootDirectory() && !dir.getStat().exists()) {
 				neededParents.push(dir);
 				dir=dir.getParent();
