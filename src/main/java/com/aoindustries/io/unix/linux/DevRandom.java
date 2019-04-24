@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2015, 2016  AO Industries, Inc.
+ * Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2015, 2016, 2019  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -98,8 +98,7 @@ public class DevRandom extends Random {
 	 * Gets the number of random bits currently available in the kernel.
 	 */
 	public static int getEntropyAvail() throws IOException {
-		BufferedReader in=new BufferedReader(new InputStreamReader(new FileInputStream(entropyAvailUF.getFile())));
-		try {
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(entropyAvailUF.getFile())))) {
 			String line=in.readLine();
 			if(line==null) throw new EOFException("EOF when reading from "+ENTROPY_AVAIL_PATH);
 			try {
@@ -107,8 +106,6 @@ public class DevRandom extends Random {
 			} catch(NumberFormatException err) {
 				throw new IOException("Unable to parse the output of "+ENTROPY_AVAIL_PATH+": "+line, err);
 			}
-		} finally {
-			in.close();
 		}
 	}
 
@@ -126,19 +123,14 @@ public class DevRandom extends Random {
 	 * Gets the number of bits in the random pool in the kernel.
 	 */
 	public static int getPoolSize() throws IOException {
-		BufferedReader in=new BufferedReader(new InputStreamReader(new FileInputStream(poolSizeUF.getFile())));
-		try {
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(poolSizeUF.getFile())))) {
 			String line=in.readLine();
 			if(line==null) throw new EOFException("EOF when reading from "+POOL_SIZE_PATH);
 			try {
 				return Integer.parseInt(line.trim())*8;
 			} catch(NumberFormatException err) {
-				IOException ioErr=new IOException("Unable to parse the output of "+POOL_SIZE_PATH+": "+line);
-				ioErr.initCause(err);
-				throw ioErr;
+				throw new IOException("Unable to parse the output of " + POOL_SIZE_PATH + ": " + line, err);
 			}
-		} finally {
-			in.close();
 		}
 	}
 
