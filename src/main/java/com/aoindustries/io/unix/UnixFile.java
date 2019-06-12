@@ -593,7 +593,7 @@ public class UnixFile {
 	 * Due to a race conditition, this method will follow symbolic links.  Please use
 	 * <code>secureDeleteRecursive</code> instead.
 	 *
-	 * @see  java.io.File#deleteRecursive
+	 * @see  #deleteRecursive(com.aoindustries.io.unix.UnixFile)
 	 */
 	final public void deleteRecursive() throws IOException {
 		deleteRecursive(this);
@@ -704,7 +704,7 @@ public class UnixFile {
 	 *
 	 * Java 1.8: Can do this in a pure Java way
 	 *
-	 * @see  java.io.File#deleteRecursive
+	 * @see  #secureDeleteRecursive(com.aoindustries.io.unix.UnixFile)
 	 */
 	final public void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<>();
@@ -717,7 +717,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * @see  #secureDeleteRecursive()
+	 * @see  #secureDeleteRecursive(int, int)
 	 */
 	private static void secureDeleteRecursive(UnixFile file) throws IOException {
 		try {
