@@ -47,6 +47,9 @@ import java.util.Stack;
  * Note: The JVM must be in a single-byte locale, such as "C", "POSIX", or
  * "en_US".  UnixFile makes this assumption in its JNI implementation.
  * </p>
+ * <p>
+ * TODO: Rename to PosixFile, and rename project to ao-posix-file.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */
