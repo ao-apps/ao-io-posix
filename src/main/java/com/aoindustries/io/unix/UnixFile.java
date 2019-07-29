@@ -37,7 +37,6 @@ import java.io.RandomAccessFile;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 
 /**
@@ -416,7 +415,7 @@ public class UnixFile {
 		return true;
 	}
 
-	private static final Random random = new SecureRandom();
+	private static final SecureRandom secureRandom = new SecureRandom();
 
 	/**
 	 * Copies one filesystem object to another.  It supports block devices, directories, fifos, regular files, and symbolic links.  Directories are not
@@ -505,11 +504,11 @@ public class UnixFile {
 		/**
 		 * Generates a random salt for this algorithm.
 		 */
-		public String generateSalt(Random random) {
+		public String generateSalt(SecureRandom secureRandom) {
 			StringBuilder salt = new StringBuilder(saltPrefix.length() + saltLength);
 			salt.append(saltPrefix);
 			for(int c = 0; c < saltLength; c++) {
-				int num = random.nextInt(64);
+				int num = secureRandom.nextInt(64);
 				if(num < 10) salt.append((char)(num + '0'));
 				else if(num < 36) salt.append((char)(num - 10 + 'A'));
 				else if(num < 62) salt.append((char)(num - 36 + 'a'));
@@ -527,33 +526,33 @@ public class UnixFile {
 	 */
 	@Deprecated
 	public static String crypt(String password) {
-		return crypt(password, CryptAlgorithm.MD5, random);
+		return crypt(password, CryptAlgorithm.MD5, secureRandom);
 	}
 
 	/**
 	 * Hashes a password using the MD5 crypt algorithm and the provided random source.
 	 *
-	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoindustries.io.unix.UnixFile.CryptAlgorithm, java.util.Random)} instead.
+	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoindustries.io.unix.UnixFile.CryptAlgorithm, java.security.SecureRandom)} instead.
 	 */
 	@Deprecated
-	public static String crypt(String password, Random random) {
-		return crypt(password, CryptAlgorithm.MD5, random);
+	public static String crypt(String password, SecureRandom secureRandom) {
+		return crypt(password, CryptAlgorithm.MD5, secureRandom);
 	}
 
 	/**
 	 * Hashes a password using the provided crypt algorithm and the internal random source.
 	 */
 	public static String crypt(String password, CryptAlgorithm algorithm) {
-		return crypt(password, algorithm, random);
+		return crypt(password, algorithm, secureRandom);
 	}
 
 	/**
 	 * Hashes a password using the provided crypt algorithm and the provided random source.
 	 */
-	public static String crypt(String password, CryptAlgorithm algorithm, Random random) {
+	public static String crypt(String password, CryptAlgorithm algorithm, SecureRandom secureRandom) {
 		return crypt(
 			password,
-			algorithm.generateSalt(random)
+			algorithm.generateSalt(secureRandom)
 		);
 	}
 
