@@ -36,7 +36,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:31:27-0500"
-		dateModified="2019-07-29T04:23:25-0500"
+		dateModified="2019-10-04T06:34:45-0500"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-unix:pom.version}" />
@@ -51,12 +51,21 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{documented.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{documented.scm.url}"
-			>
-				<ul>
-					<li>Changed API from <code>Random</code> to <code>SecureRandom</code> where cryptographically strong random numbers are required.</li>
-				</ul>
-			</changelog:release>
+			/>
 		</c:if>
+
+		<changelog:release
+			projectName="@{documented.name}"
+			version="3.0.0"
+			datePublished="2019-10-04T06:34:45-0500"
+			groupId="@{documented.groupId}"
+			artifactId="@{documented.artifactId}"
+			scmUrl="@{documented.scm.url}"
+		>
+			<ul>
+				<li>Changed API from <code>Random</code> to <code>SecureRandom</code> where cryptographically strong random numbers are required.</li>
+			</ul>
+		</changelog:release>
 
 		<changelog:release
 			projectName="@{documented.name}"
