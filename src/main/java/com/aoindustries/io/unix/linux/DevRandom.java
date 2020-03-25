@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2015, 2016, 2019  AO Industries, Inc.
+ * Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2015, 2016, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,9 +22,9 @@
  */
 package com.aoindustries.io.unix.linux;
 
+import com.aoindustries.exception.WrappedException;
 import com.aoindustries.io.unix.UnixFile;
 import com.aoindustries.util.ErrorPrinter;
-import com.aoindustries.util.WrappedException;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.FileInputStream;
