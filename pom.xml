@@ -29,7 +29,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		<relativePath>../ao-oss-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.aoindustries</groupId><artifactId>ao-io-unix</artifactId><version>3.0.1</version>
+	<groupId>com.aoindustries</groupId><artifactId>ao-io-unix</artifactId><version>3.0.1-POST-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<name>AO IO Unix</name>
@@ -42,7 +42,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		<connection>scm:git:git://github.com/aoindustries/ao-io-unix.git</connection>
 		<developerConnection>scm:git:git@github.com:aoindustries/ao-io-unix.git</developerConnection>
 		<url>https://github.com/aoindustries/ao-io-unix</url>
-		<tag>ao-io-unix-3.0.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
