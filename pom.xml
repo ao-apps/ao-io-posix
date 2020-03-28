@@ -62,7 +62,6 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 								<link>${javadoc.link.javase}</link>
 								<!-- Direct -->
 								<link>https://aoindustries.com/ao-lang/apidocs/</link>
-								<link>https://aoindustries.com/aocode-public/apidocs/</link>
 							</links>
 						</configuration>
 					</plugin>
@@ -75,14 +74,14 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		<dependencies>
 			<!-- Test -->
 			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>4.0.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId><artifactId>junit</artifactId><version>4.13</version>
 			</dependency>
 			<!-- Direct -->
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId><version>4.1.0${POST-SNAPSHOT}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>4.0.0${POST-SNAPSHOT}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -90,15 +89,16 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 	<dependencies>
 		<!-- Test -->
 		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId><artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<!-- Direct -->
 		<dependency>
 			<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId>
 		</dependency>
 	</dependencies>
 </project>
