@@ -71,22 +71,36 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Test -->
+			<!-- Direct -->
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId><version>4.1.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<!-- Test Direct -->
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>4.0.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId><artifactId>junit</artifactId><version>4.13</version>
 			</dependency>
-			<!-- Direct -->
+			<!-- Test Transitive -->
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId><version>4.1.0${POST-SNAPSHOT}</version>
+				<groupId>com.aoindustries</groupId><artifactId>ao-collections</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-tempfiles</artifactId><version>1.0.2${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId><artifactId>hamcrest-core</artifactId><version>1.3</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
-		<!-- Test -->
+		<!-- Direct -->
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId>
+		</dependency>
+		<!-- Test Direct -->
 		<dependency>
 			<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId>
 			<scope>test</scope>
@@ -94,10 +108,6 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		<dependency>
 			<groupId>junit</groupId><artifactId>junit</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<!-- Direct -->
-		<dependency>
-			<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId>
 		</dependency>
 	</dependencies>
 </project>
