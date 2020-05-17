@@ -61,6 +61,9 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 								<link>${javadoc.link.javase}</link>
 								<!-- Direct -->
 								<link>https://aoindustries.com/ao-lang/apidocs/</link>
+								<!-- Test Direct -->
+								<link>https://aoindustries.com/aocode-public/apidocs/</link>
+								<link>https://junit.org/junit4/javadoc/latest/</link>
 							</links>
 						</configuration>
 					</plugin>
