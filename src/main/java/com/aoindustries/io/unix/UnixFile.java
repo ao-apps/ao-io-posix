@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -38,6 +38,8 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Access and modify all the Unix specific file attributes.  These updates are made using
@@ -53,6 +55,8 @@ import java.util.Stack;
  * @author  AO Industries, Inc.
  */
 public class UnixFile {
+
+	private static final Logger logger = Logger.getLogger(UnixFile.class.getName());
 
 	/**
 	 * The UID of the root user.
@@ -613,14 +617,16 @@ public class UnixFile {
 				String[] list = file.list();
 				if (list != null) {
 					int len = list.length;
-					for (int c = 0; c < len; c++) deleteRecursive(new UnixFile(file, list[c], false));
+					for (int c = 0; c < len; c++) {
+						deleteRecursive(new UnixFile(file, list[c], false));
+					}
 				}
 			}
 			file.delete();
 		} catch(FileNotFoundException err) {
 			// OK if it was deleted while we're trying to deleteRecursive it
 		} catch(IOException err) {
-			System.err.println("Error recursively delete: "+file.path);
+			if(logger.isLoggable(Level.FINER)) logger.finer("Error recursively delete: " + file.path);
 			throw err;
 		}
 	}
@@ -733,12 +739,14 @@ public class UnixFile {
 				String[] list = file.list();
 				if (list != null) {
 					int len = list.length;
-					for (int c = 0; c < len; c++) secureDeleteRecursive(new UnixFile(file, list[c]));
+					for (int c = 0; c < len; c++) {
+						secureDeleteRecursive(new UnixFile(file, list[c]));
+					}
 				}
 			}
 			file.delete();
 		} catch(IOException err) {
-			System.err.println("Error recursively delete: "+file.path);
+			if(logger.isLoggable(Level.FINER)) logger.finer("Error recursively delete: " + file.path);
 			throw err;
 		}
 	}
@@ -1115,7 +1123,7 @@ public class UnixFile {
 			loadLibrary();
 			return new UnixFile(mktemp0(path));
 		} catch(IOException err) {
-			System.err.println("UnixFile.mktemp: IOException: template="+template);
+			if(logger.isLoggable(Level.FINER)) logger.finer("UnixFile.mktemp: IOException: template=" + template);
 			throw err;
 		}
 	}

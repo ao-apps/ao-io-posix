@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2019  AO Industries, Inc.
+ * Copyright (C) 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2019, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -43,6 +43,7 @@ import junit.framework.TestSuite;
  *
  * @author  AO Industries, Inc.
  */
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class FilesystemIteratorTestTODO extends TestCase {
 
 	public FilesystemIteratorTestTODO(String testName) {
@@ -259,19 +260,27 @@ public class FilesystemIteratorTestTODO extends TestCase {
 		}
 		int longerList = Math.max(expectedResults.size(), results.size());
 		System.out.print("Expected");
-		for(int d=8;d<widestExpected;d++) System.out.print(' ');
+		for(int d=8;d<widestExpected;d++) {
+			System.out.print(' ');
+		}
 		System.out.print(' ');
 		System.out.print("Actual");
-		for(int d=6;d<widestActual;d++) System.out.print(' ');
+		for(int d=6;d<widestActual;d++) {
+			System.out.print(' ');
+		}
 		System.out.println();
 		for(int c=0;c<longerList;c++) {
 			String expected = c<expectedResults.size() ? expectedResults.get(c) : "";
 			System.out.print(expected);
-			for(int d=expected.length();d<widestExpected;d++) System.out.print(' ');
+			for(int d=expected.length();d<widestExpected;d++) {
+				System.out.print(' ');
+			}
 			System.out.print(' ');
 			String actual = c<results.size() ? results.get(c) : "";
 			System.out.print(actual);
-			for(int d=actual.length();d<widestActual;d++) System.out.print(' ');
+			for(int d=actual.length();d<widestActual;d++) {
+				System.out.print(' ');
+			}
 			System.out.println();
 		}
 		assertEquals("Results are not as expected", expectedResults, results);
