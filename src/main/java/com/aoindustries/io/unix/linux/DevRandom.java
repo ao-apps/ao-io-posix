@@ -334,6 +334,7 @@ public class DevRandom extends Random {
 	/**
 	 * Manually adds entropy to the kernel, reads from standard in.
 	 */
+	@SuppressWarnings("UseOfSystemOutOrSystemErr")
 	public static void main(String[] args) {
 		try {
 			byte[] buff=new byte[16];
@@ -346,7 +347,7 @@ public class DevRandom extends Random {
 				} else DevRandom.addEntropy(buff);
 			}
 		} catch(IOException err) {
-			ErrorPrinter.printStackTraces(err);
+			ErrorPrinter.printStackTraces(err, System.err);
 		}
 	}
 }
