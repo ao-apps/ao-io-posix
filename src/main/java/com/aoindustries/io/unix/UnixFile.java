@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -205,8 +206,8 @@ public class UnixFile {
 	 */
 	protected final String path;
 
-	private File file;
-	private UnixFile _parent;
+	private File file; // TODO: volatile?
+	private UnixFile _parent; // TODO: volatile?
 
 	private static String checkPath(String path) {
 		if(path.indexOf(0) != -1) {
@@ -1115,7 +1116,10 @@ public class UnixFile {
 	 * This method will follow symbolic links in the path but not final links.
 	 *
 	 * @see  #mktemp(String,boolean)
+	 *
+	 * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}.
 	 */
+	@Deprecated
 	public static UnixFile mktemp(String template) throws IOException {
 		try {
 			String path = template + "XXXXXXXXXX";
@@ -1134,7 +1138,8 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path but not final links.
 	 *
-	 * @deprecated  Please use <a href="https://aoindustries.com/ao-tempfiles/apidocs/com/aoindustries/tempfiles/TempFileContext.html">TempFileContext</a>
+	 * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}
+	 *              or <a href="https://aoindustries.com/ao-tempfiles/apidocs/com/aoindustries/tempfiles/TempFileContext.html">TempFileContext</a>
 	 *              as {@link File#deleteOnExit()} is prone to memory leaks in long-running applications.
 	 */
 	@Deprecated

@@ -37,7 +37,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:31:27-0500"
-		dateModified="2020-03-28T18:31:43-05:00"
+		dateModified="2020-11-13T01:20:47-06:00"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:ao-io-unix:pom.version}" />
@@ -52,7 +52,15 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{project.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{project.scm.url}"
-			/>
+			>
+				<ul>
+					<li>
+						Deprecated <code>UnixFile.mktemp(String)</code> in favor of standard
+						<code>java.nio.file.Files.createTempDirectory(…)</code>, which does not require any custom
+						JNI native library.
+					</li>
+				</ul>
+			</changelog:release>
 		</c:if>
 
 		<changelog:release

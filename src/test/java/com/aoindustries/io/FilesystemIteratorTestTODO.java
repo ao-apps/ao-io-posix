@@ -26,6 +26,7 @@ import com.aoindustries.io.unix.UnixFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,9 +55,7 @@ public class FilesystemIteratorTestTODO extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		tempDir = UnixFile.mktemp("/tmp/FilesystemIteratorTest.");
-		tempDir.delete();
-		tempDir.mkdir(false, 0700);
+		tempDir = new UnixFile(Files.createTempDirectory("FilesystemIteratorTest.").toFile());
 		UnixFile tmp = new UnixFile(tempDir, "tmp", true).mkdir(false, 0755);
 		UnixFile tmp_something = new UnixFile(tmp, "something", true);
 		new FileOutputStream(tmp_something.getFile()).close();
