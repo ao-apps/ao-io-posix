@@ -591,7 +591,7 @@ public class UnixFile {
 	 * @see  java.io.File#delete
 	 */
 	final public void delete() throws IOException {
-		FileUtils.delete(getFile());
+		Files.delete(getFile().toPath());
 	}
 
 	/**
