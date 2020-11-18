@@ -22,7 +22,6 @@
  */
 package com.aoindustries.io.unix.linux;
 
-import com.aoindustries.exception.WrappedException;
 import com.aoindustries.io.unix.UnixFile;
 import com.aoindustries.util.ErrorPrinter;
 import java.io.BufferedReader;
@@ -30,6 +29,7 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.util.Random;
 
 /**
@@ -186,9 +186,9 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				// Ignore since we already have an exception we are throwing
+				err.addSuppressed(err2);
 			}
-			throw new WrappedException(err);
+			throw new UncheckedIOException(err);
 		}
 	}
 
@@ -200,9 +200,9 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				// Ignore since we already have an exception we are throwing
+				err.addSuppressed(err2);
 			}
-			throw new WrappedException(err);
+			throw new UncheckedIOException(err);
 		}
 	}
 
@@ -257,9 +257,9 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				// Ignore since we already have an exception we are throwing
+				err.addSuppressed(err2);
 			}
-			throw new WrappedException(err);
+			throw new UncheckedIOException(err);
 		}
 	}
 
@@ -285,9 +285,9 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				// Ignore since we already have an exception we are throwing
+				err.addSuppressed(err2);
 			}
-			throw new WrappedException(err);
+			throw new UncheckedIOException(err);
 		}
 	}
 
@@ -325,9 +325,9 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				// Ignore since we already have an exception we are throwing
+				err.addSuppressed(err2);
 			}
-			throw new WrappedException(err);
+			throw new UncheckedIOException(err);
 		}
 	}
 
