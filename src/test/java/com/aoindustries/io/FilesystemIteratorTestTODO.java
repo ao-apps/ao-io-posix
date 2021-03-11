@@ -1,6 +1,6 @@
 /*
  * ao-io-unix - Java interface to native Unix filesystem objects.
- * Copyright (C) 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2019, 2020  AO Industries, Inc.
+ * Copyright (C) 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -90,8 +90,8 @@ public class FilesystemIteratorTestTODO extends TestCase {
 	 * Without any rules the iterator should not return anything (defaults to exclude all).
 	 */
 	public void testIteratorNone() throws IOException {
-		Map<String,FilesystemIteratorRule> rules = Collections.emptyMap();
-		Map<String,FilesystemIteratorRule> prefixRules = Collections.emptyMap();
+		Map<String, FilesystemIteratorRule> rules = Collections.emptyMap();
+		Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
 		List<String> expectedResults = new ArrayList<>();
 		doTest(
 			rules,
@@ -101,8 +101,8 @@ public class FilesystemIteratorTestTODO extends TestCase {
 	}
 
 	public void testIterateAll() throws IOException {
-		Map<String,FilesystemIteratorRule> rules = Collections.singletonMap(tempDir.getPath(), FilesystemIteratorRule.OK);
-		Map<String,FilesystemIteratorRule> prefixRules = Collections.emptyMap();
+		Map<String, FilesystemIteratorRule> rules = Collections.singletonMap(tempDir.getPath(), FilesystemIteratorRule.OK);
+		Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
 		List<String> expectedResults = new ArrayList<>();
 		expectedResults.add("/");
 		expectedResults.add("/tmp");
@@ -124,10 +124,10 @@ public class FilesystemIteratorTestTODO extends TestCase {
 	}
 
 	public void testIncludeDirectoryAndSkipContents() throws IOException {
-		Map<String,FilesystemIteratorRule> rules = new HashMap<>();
+		Map<String, FilesystemIteratorRule> rules = new HashMap<>();
 		rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
 		rules.put(tempDir.getPath()+"/tmp/", FilesystemIteratorRule.SKIP);
-		Map<String,FilesystemIteratorRule> prefixRules = Collections.emptyMap();
+		Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
 		List<String> expectedResults = new ArrayList<>();
 		expectedResults.add("/");
 		expectedResults.add("/tmp");
@@ -148,13 +148,13 @@ public class FilesystemIteratorTestTODO extends TestCase {
 	}
 
 	public void testFileExistsRuleExists() throws IOException {
-		Map<String,FilesystemIteratorRule> rules = new HashMap<>();
+		Map<String, FilesystemIteratorRule> rules = new HashMap<>();
 		rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
 		rules.put(
 			tempDir.getPath()+"/home/a/aoadmin/something",
 			new FileExistsRule(new String[] {tempDir.getPath()+"/home/a/aoadmin/something2"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
 		);
-		Map<String,FilesystemIteratorRule> prefixRules = Collections.emptyMap();
+		Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
 		List<String> expectedResults = new ArrayList<>();
 		expectedResults.add("/");
 		expectedResults.add("/tmp");
@@ -175,13 +175,13 @@ public class FilesystemIteratorTestTODO extends TestCase {
 	}
 
 	public void testFileExistsRuleNotExists() throws IOException {
-		Map<String,FilesystemIteratorRule> rules = new HashMap<>();
+		Map<String, FilesystemIteratorRule> rules = new HashMap<>();
 		rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
 		rules.put(
 			tempDir.getPath()+"/home/a/aoadmin/something",
 			new FileExistsRule(new String[] {tempDir.getPath()+"/home/a/aoadmin/somethingNotHere"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
 		);
-		Map<String,FilesystemIteratorRule> prefixRules = Collections.emptyMap();
+		Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
 		List<String> expectedResults = new ArrayList<>();
 		expectedResults.add("/");
 		expectedResults.add("/tmp");
@@ -203,13 +203,13 @@ public class FilesystemIteratorTestTODO extends TestCase {
 	}
 
 	public void testFileExistsRuleBrokenLink() throws IOException {
-		Map<String,FilesystemIteratorRule> rules = new HashMap<>();
+		Map<String, FilesystemIteratorRule> rules = new HashMap<>();
 		rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
 		rules.put(
 			tempDir.getPath()+"/home/a/aoadmin/something",
 			new FileExistsRule(new String[] {tempDir.getPath()+"/home/a/aoadmin/brokenlink"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
 		);
-		Map<String,FilesystemIteratorRule> prefixRules = Collections.emptyMap();
+		Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
 		List<String> expectedResults = new ArrayList<>();
 		expectedResults.add("/");
 		expectedResults.add("/tmp");
@@ -234,8 +234,8 @@ public class FilesystemIteratorTestTODO extends TestCase {
 	 * Performs the test against expected results.
 	 */
 	private void doTest(
-		Map<String,FilesystemIteratorRule> rules,
-		Map<String,FilesystemIteratorRule> prefixRules,
+		Map<String, FilesystemIteratorRule> rules,
+		Map<String, FilesystemIteratorRule> prefixRules,
 		List<String> expectedResults
 	) throws IOException {
 		FilesystemIterator iterator = new FilesystemIterator(
