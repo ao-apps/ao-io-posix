@@ -37,7 +37,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:31:27-05:00"
-		dateModified="2020-11-13T01:20:47-06:00"
+		dateModified="2021-05-25T18:54:28-05:00"
 	>
 		<c:if test="${fn:endsWith('@{project.version}', '-SNAPSHOT') and !fn:endsWith('@{project.version}', '-POST-SNAPSHOT')}">
 			<changelog:release
@@ -53,6 +53,7 @@ along with ao-io-unix.  If not, see <http://www.gnu.org/licenses />.
 						<code>java.nio.file.Files.createTempDirectory(…)</code>, which does not require any custom
 						JNI native library.
 					</li>
+					<li>Updated dependencies.</li>
 				</ul>
 			</changelog:release>
 		</c:if>
