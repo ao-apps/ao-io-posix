@@ -1,13 +1,13 @@
 /*
- * ao-io-unix - Java interface to native Unix filesystem objects.
+ * ao-io-posix - Java interface to native POSIX filesystem objects.
  * Copyright (C) 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
  *
- * This file is part of ao-io-unix.
+ * This file is part of ao-io-posix.
  *
- * ao-io-unix is free software: you can redistribute it and/or modify
+ * ao-io-posix is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -18,7 +18,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with ao-io-unix.  If not, see <http://www.gnu.org/licenses/>.
+ * along with ao-io-posix.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.aoindustries.io;
 
