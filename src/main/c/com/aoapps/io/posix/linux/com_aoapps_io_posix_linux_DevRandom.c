@@ -20,23 +20,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-posix.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <stdlib.h>
 #include <jni.h>
 #include "../aocode_shared.h"
-#include "com_aoindustries_io_unix_linux_DevRandom.h"
+#include "com_aoapps_io_posix_linux_DevRandom.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/types.h>
 #include <linux/random.h>
 #include <string.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 extern int errno;
 
 /*
- * Class:     com_aoindustries_io_unix_linux_DevRandom
+ * Class:     com_aoapps_io_posix_linux_DevRandom
  * Method:    addEntropy0
  * Signature: ([B)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_linux_DevRandom_addEntropy0(JNIEnv* env, jclass cls, jbyteArray randomData) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_linux_DevRandom_addEntropy0(JNIEnv* env, jclass cls, jbyteArray randomData) {
 	jclass newExcCls=NULL;
 
 	// First, build up the rand_pool_info structure

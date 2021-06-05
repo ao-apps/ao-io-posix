@@ -20,10 +20,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-posix.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io.unix.linux;
+package com.aoapps.io.posix.linux;
 
-import com.aoindustries.io.unix.UnixFile;
-import com.aoindustries.util.ErrorPrinter;
+import com.aoapps.io.posix.PosixFile;
+import com.aoapps.lang.util.ErrorPrinter;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -53,7 +53,7 @@ public class DevRandom extends Random {
 	/**
 	 * The device file used to obtain and add random data.
 	 */
-	public static final UnixFile devRandomUF=new UnixFile(DEV_RANDOM_PATH);
+	public static final PosixFile devRandomUF=new PosixFile(DEV_RANDOM_PATH);
 
 	/**
 	 * The access to the device file.
@@ -92,7 +92,7 @@ public class DevRandom extends Random {
 	/**
 	 * The device file used to obtain the entropy statistics.
 	 */
-	public static final UnixFile entropyAvailUF=new UnixFile(ENTROPY_AVAIL_PATH);
+	public static final PosixFile entropyAvailUF=new PosixFile(ENTROPY_AVAIL_PATH);
 
 	/**
 	 * Gets the number of random bits currently available in the kernel.
@@ -117,7 +117,7 @@ public class DevRandom extends Random {
 	/**
 	 * The device file used to obtain the pool size.
 	 */
-	public static final UnixFile poolSizeUF=new UnixFile(POOL_SIZE_PATH);
+	public static final PosixFile poolSizeUF=new PosixFile(POOL_SIZE_PATH);
 
 	/**
 	 * Gets the number of bits in the random pool in the kernel.
@@ -145,7 +145,7 @@ public class DevRandom extends Random {
 	public static void addEntropy(byte[] randomData) throws IOException {
 		SecurityManager security=System.getSecurityManager();
 		if(security!=null) security.checkRead(DEV_RANDOM_PATH);
-		UnixFile.loadLibrary();
+		PosixFile.loadLibrary();
 		synchronized(addEntropyLock) {
 			addEntropy0(randomData);
 		}

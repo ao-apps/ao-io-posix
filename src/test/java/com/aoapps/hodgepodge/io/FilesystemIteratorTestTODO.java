@@ -12,7 +12,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * ao-io-unix is distributed in the hope that it will be useful,
+ * ao-io-posix is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
@@ -20,9 +20,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-posix.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io;
+package com.aoapps.hodgepodge.io;
 
-import com.aoindustries.io.unix.UnixFile;
+import com.aoapps.io.posix.PosixFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,27 +51,27 @@ public class FilesystemIteratorTestTODO extends TestCase {
 		super(testName);
 	}
 
-	private UnixFile tempDir;
+	private PosixFile tempDir;
 
 	@Override
 	protected void setUp() throws Exception {
-		tempDir = new UnixFile(Files.createTempDirectory("FilesystemIteratorTest.").toFile());
-		UnixFile tmp = new UnixFile(tempDir, "tmp", true).mkdir(false, 0755);
-		UnixFile tmp_something = new UnixFile(tmp, "something", true);
+		tempDir = new PosixFile(Files.createTempDirectory("FilesystemIteratorTest.").toFile());
+		PosixFile tmp = new PosixFile(tempDir, "tmp", true).mkdir(false, 0755);
+		PosixFile tmp_something = new PosixFile(tmp, "something", true);
 		new FileOutputStream(tmp_something.getFile()).close();
 		tmp_something.setMode(0644);
-		UnixFile home = new UnixFile(tempDir, "home", true).mkdir(false, 0755);
-		UnixFile home_a = new UnixFile(home, "a", true).mkdir(false, 0755);
-		UnixFile home_a_aoadmin = new UnixFile(home_a, "aoadmin", true).mkdir(false, 0700);
-		UnixFile home_a_aoadmin_something = new UnixFile(home_a_aoadmin, "something", true);
+		PosixFile home = new PosixFile(tempDir, "home", true).mkdir(false, 0755);
+		PosixFile home_a = new PosixFile(home, "a", true).mkdir(false, 0755);
+		PosixFile home_a_aoadmin = new PosixFile(home_a, "aoadmin", true).mkdir(false, 0700);
+		PosixFile home_a_aoadmin_something = new PosixFile(home_a_aoadmin, "something", true);
 		new FileOutputStream(home_a_aoadmin_something.getFile()).close();
 		home_a_aoadmin_something.setMode(0600);
-		UnixFile home_a_aoadmin_something2 = new UnixFile(home_a_aoadmin, "something2", true);
+		PosixFile home_a_aoadmin_something2 = new PosixFile(home_a_aoadmin, "something2", true);
 		new FileOutputStream(home_a_aoadmin_something2.getFile()).close();
 		home_a_aoadmin_something2.setMode(0644);
-		UnixFile home_a_aoadmin_badlink = new UnixFile(home_a_aoadmin, "badlink", true);
+		PosixFile home_a_aoadmin_badlink = new PosixFile(home_a_aoadmin, "badlink", true);
 		home_a_aoadmin_badlink.symLink("../aoadmin");
-		UnixFile home_a_aoadmin_brokenlink = new UnixFile(home_a_aoadmin, "brokenlink", true);
+		PosixFile home_a_aoadmin_brokenlink = new PosixFile(home_a_aoadmin, "brokenlink", true);
 		home_a_aoadmin_brokenlink.symLink("brokenlinknotarget");
 	}
 

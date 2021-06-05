@@ -20,14 +20,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-posix.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io.unix;
+package com.aoapps.io.posix;
 
 import java.io.FileNotFoundException;
 
 /**
  * One stat call will have all of its output stored in an instance of this class.
  *
- * @see  UnixFile#getStat()
+ * @see  PosixFile#getStat()
  *
  * @author  AO Industries, Inc.
  */
@@ -138,15 +138,15 @@ public class Stat {
 	 */
 	public long getMode() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return mode & UnixFile.PERMISSION_MASK;
+		return mode & PosixFile.PERMISSION_MASK;
 	}
 
 	/**
-	 * Gets a String representation of the mode of this file similar to the output of the Unix ls command.
+	 * Gets a String representation of the mode of this file similar to the output of the POSIX <code>ls</code> command.
 	 */
 	public String getModeString() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.getModeString(mode);
+		return PosixFile.getModeString(mode);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class Stat {
 	 */
 	public boolean isBlockDevice() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.isBlockDevice(mode);
+		return PosixFile.isBlockDevice(mode);
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class Stat {
 	 */
 	public boolean isCharacterDevice() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.isCharacterDevice(mode);
+		return PosixFile.isCharacterDevice(mode);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class Stat {
 	 */
 	public boolean isDirectory() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.isDirectory(mode);
+		return PosixFile.isDirectory(mode);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class Stat {
 	 */
 	public boolean isFifo() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.isFifo(mode);
+		return PosixFile.isFifo(mode);
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class Stat {
 	 */
 	public boolean isRegularFile() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.isRegularFile(mode);
+		return PosixFile.isRegularFile(mode);
 	}
 
 	/**
@@ -274,7 +274,7 @@ public class Stat {
 	 */
 	public boolean isSocket() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.isSocket(mode);
+		return PosixFile.isSocket(mode);
 	}
 
 	/**
@@ -282,6 +282,6 @@ public class Stat {
 	 */
 	public boolean isSymLink() throws FileNotFoundException {
 		if(!exists) throw new FileNotFoundException();
-		return UnixFile.isSymLink(mode);
+		return PosixFile.isSymLink(mode);
 	}
 }

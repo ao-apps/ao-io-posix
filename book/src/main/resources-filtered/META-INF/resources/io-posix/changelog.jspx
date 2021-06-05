@@ -37,7 +37,7 @@ along with ao-io-posix.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2016-10-29T20:31:27-05:00"
-		dateModified="2021-05-31T01:04:26-05:00"
+		dateModified="2021-06-03T22:53:21-05:00"
 	>
 		<c:if test="${fn:endsWith('@{project.version}', '-SNAPSHOT') and !fn:endsWith('@{project.version}', '-POST-SNAPSHOT')}">
 			<changelog:release
@@ -49,12 +49,14 @@ along with ao-io-posix.  If not, see <http://www.gnu.org/licenses />.
 				scmUrl="@{project.scm.url}"
 			>
 				<ul>
+					<li>Maven artifact relocated from <code>com.aoindustries:ao-io-unix</code> to <code>com.aoapps:ao-io-posix</code>.</li>
+					<li>Package renamed from <code>com.aoindustries.io.unix</code> to <code>com.aoapps.io.posix</code>.</li>
+					<li>Renamed <code>UnixFile</code> to <code>PosixFile</code>.</li>
 					<li>
-						Deprecated <code>UnixFile.mktemp(String)</code> in favor of standard
+						Deprecated <code>PosixFile.mktemp(String)</code> in favor of standard
 						<code>java.nio.file.Files.createTempDirectory(…)</code>, which does not require any custom
 						JNI native library.
 					</li>
-					<li>Maven artifact relocated from <code>com.aoindustries:ao-io-unix</code> to <code>com.aoapps:ao-io-posix</code>.</li>
 				</ul>
 			</changelog:release>
 		</c:if>
@@ -119,8 +121,8 @@ along with ao-io-posix.  If not, see <http://www.gnu.org/licenses />.
 			<ul>
 				<li>Minimum Java version changed from 1.6 to 1.7.</li>
 				<li>
-					Deprecated <ao:a href="apidocs/com/aoindustries/io/unix/UnixFile.html#mktemp-java.lang.String-boolean-">UnixFile.mktemp(String template, boolean deleteOnExit)</ao:a>
-					in favor of new <ao:a href="https://oss.aoapps.com/tempfiles/apidocs/com/aoindustries/tempfiles/TempFileContext.html">TempFileContext</ao:a>
+					Deprecated <ao:a href="apidocs/com/aoapps/io/posix/PosixFile.html#mktemp-java.lang.String-boolean-">UnixFile.mktemp(String template, boolean deleteOnExit)</ao:a>
+					in favor of new <ao:a href="https://oss.aoapps.com/tempfiles/apidocs/com/aoapps/tempfiles/TempFileContext.html">TempFileContext</ao:a>
 					that does not suffer from a memory leak in long-running applications.
 				</li>
 			</ul>

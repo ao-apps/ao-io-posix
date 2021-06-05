@@ -20,11 +20,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with ao-io-posix.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.io.unix;
+package com.aoapps.io.posix;
 
-import com.aoindustries.io.FileUtils;
-import com.aoindustries.io.IoUtils;
-import com.aoindustries.util.BufferManager;
+import com.aoapps.lang.io.FileUtils;
+import com.aoapps.lang.io.IoUtils;
+import com.aoapps.lang.util.BufferManager;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,11 +43,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Access and modify all the Unix specific file attributes.  These updates are made using
+ * Access and modify all the POSIX-specific file attributes.  These updates are made using
  * a Linux shared library provided as a resource.  The source code is also supplied.
  * <p>
  * Note: The JVM must be in a single-byte locale, such as "C", "POSIX", or
- * "en_US".  UnixFile makes this assumption in its JNI implementation.
+ * "en_US".  PosixFile makes this assumption in its JNI implementation.
  * </p>
  * <p>
  * TODO: Rename to PosixFile, and rename project to ao-posix-file.
@@ -55,9 +55,9 @@ import java.util.logging.Logger;
  *
  * @author  AO Industries, Inc.
  */
-public class UnixFile {
+public class PosixFile {
 
-	private static final Logger logger = Logger.getLogger(UnixFile.class.getName());
+	private static final Logger logger = Logger.getLogger(PosixFile.class.getName());
 
 	/**
 	 * The UID of the root user.
@@ -207,7 +207,7 @@ public class UnixFile {
 	protected final String path;
 
 	private File file; // TODO: volatile?
-	private UnixFile _parent; // TODO: volatile?
+	private PosixFile _parent; // TODO: volatile?
 
 	private static String checkPath(String path) {
 		if(path.indexOf(0) != -1) {
@@ -219,17 +219,17 @@ public class UnixFile {
 	/**
 	 * Strictly requires the parent to be a directory if it exists.
 	 *
-	 * @deprecated  Please call #UnixFile(UnixFile,String,boolean) to explicitly control whether strict parent checking is performed
+	 * @deprecated  Please call #PosixFile(PosixFile,String,boolean) to explicitly control whether strict parent checking is performed
 	 */
 	@Deprecated
-	public UnixFile(UnixFile parent, String path) throws IOException {
+	public PosixFile(PosixFile parent, String path) throws IOException {
 		this(parent, path, true);
 	}
 
 	/**
 	 * When strictly checking, a parent must be a directory if it exists.
 	 */
-	public UnixFile(UnixFile parent, String path, boolean strict) throws IOException {
+	public PosixFile(PosixFile parent, String path, boolean strict) throws IOException {
 		if(parent==null) throw new NullPointerException("parent is null");
 		if(strict) {
 			Stat parentStat = parent.getStat();
@@ -242,21 +242,21 @@ public class UnixFile {
 		}
 	}
 
-	public UnixFile(File file) {
+	public PosixFile(File file) {
 		if(file==null) throw new NullPointerException("file is null");
 		this.path = checkPath(file.getPath());
 		this.file=file;
 	}
 
-	public UnixFile(File parent, String filename) {
+	public PosixFile(File parent, String filename) {
 		this(parent.getPath(), filename);
 	}
 
-	public UnixFile(String path) {
+	public PosixFile(String path) {
 		this.path = checkPath(path);
 	}
 
-	public UnixFile(String parent, String filename) {
+	public PosixFile(String parent, String filename) {
 		if(parent.equals("/")) {
 			this.path = checkPath(parent+filename);
 		} else {
@@ -266,7 +266,7 @@ public class UnixFile {
 
 	/**
 	 * Ensures that the calling thread is allowed to read this
-	 * <code>UnixFile</code> in any way.
+	 * <code>PosixFile</code> in any way.
 	 */
 	final public void checkRead() throws IOException {
 		SecurityManager security=System.getSecurityManager();
@@ -284,7 +284,7 @@ public class UnixFile {
 
 	/**
 	 * Ensures that the calling thread is allowed to write to or modify this
-	 * <code>UnixFile</code> in any way.
+	 * <code>PosixFile</code> in any way.
 	 */
 	final public void checkWrite() throws IOException {
 		SecurityManager security=System.getSecurityManager();
@@ -305,7 +305,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path but not a final symbolic link.
 	 */
-	final public UnixFile chown(int uid, int gid) throws IOException {
+	final public PosixFile chown(int uid, int gid) throws IOException {
 		checkWrite();
 		loadLibrary();
 		chown0(path, uid, gid);
@@ -332,7 +332,7 @@ public class UnixFile {
 	 *
 	 * This method will follow both path symbolic links and a final symbolic link.
 	 */
-	public boolean contentEquals(UnixFile otherUF) throws IOException {
+	public boolean contentEquals(PosixFile otherUF) throws IOException {
 		Stat stat = getStat();
 		if(!stat.isRegularFile()) throw new IOException("Not a regular file: "+path);
 		Stat otherStat = otherUF.getStat();
@@ -373,7 +373,7 @@ public class UnixFile {
 	 *
 	 * Java 1.8: Can do this in a pure Java way
 	 */
-	public boolean secureContentEquals(UnixFile otherUF, int uid_min, int gid_min) throws IOException {
+	public boolean secureContentEquals(PosixFile otherUF, int uid_min, int gid_min) throws IOException {
 		Stat stat = getStat();
 		if(!stat.isRegularFile()) throw new IOException("Not a regular file: "+path);
 		Stat otherStat = otherUF.getStat();
@@ -428,7 +428,7 @@ public class UnixFile {
 	 *
 	 * This method will follow both path symbolic links and a final symbolic link.
 	 */
-	public void copyTo(UnixFile otherUF, boolean overwrite) throws IOException {
+	public void copyTo(PosixFile otherUF, boolean overwrite) throws IOException {
 		checkRead();
 		otherUF.checkWrite();
 		Stat stat = getStat();
@@ -527,7 +527,7 @@ public class UnixFile {
 	/**
 	 * Hashes a password using the MD5 crypt algorithm and the internal random source.
 	 *
-	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoindustries.io.unix.UnixFile.CryptAlgorithm)} instead.
+	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm)} instead.
 	 */
 	@Deprecated
 	public static String crypt(String password) {
@@ -537,7 +537,7 @@ public class UnixFile {
 	/**
 	 * Hashes a password using the MD5 crypt algorithm and the provided random source.
 	 *
-	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoindustries.io.unix.UnixFile.CryptAlgorithm, java.security.SecureRandom)} instead.
+	 * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm, java.security.SecureRandom)} instead.
 	 */
 	@Deprecated
 	public static String crypt(String password, SecureRandom secureRandom) {
@@ -600,7 +600,7 @@ public class UnixFile {
 	 * Due to a race conditition, this method will follow symbolic links.  Please use
 	 * <code>secureDeleteRecursive</code> instead.
 	 *
-	 * @see  #deleteRecursive(com.aoindustries.io.unix.UnixFile)
+	 * @see  #deleteRecursive(com.aoapps.io.posix.PosixFile)
 	 */
 	final public void deleteRecursive() throws IOException {
 		deleteRecursive(this);
@@ -609,7 +609,7 @@ public class UnixFile {
 	/**
 	 * @see  #deleteRecursive()
 	 */
-	private static void deleteRecursive(UnixFile file) throws IOException {
+	private static void deleteRecursive(PosixFile file) throws IOException {
 		try {
 			Stat stat = file.getStat();
 			// This next line matches directories specifically to avoid listing and recursing into symlink references
@@ -619,7 +619,7 @@ public class UnixFile {
 				if (list != null) {
 					int len = list.length;
 					for (int c = 0; c < len; c++) {
-						deleteRecursive(new UnixFile(file, list[c], false));
+						deleteRecursive(new PosixFile(file, list[c], false));
 					}
 				}
 			}
@@ -636,12 +636,12 @@ public class UnixFile {
 	 * Java 1.8: Can do this in a pure Java way
 	 */
 	public static class SecuredDirectory {
-		private final UnixFile directory;
+		private final PosixFile directory;
 		private final long mode;
 		private final int uid;
 		private final int gid;
 
-		private SecuredDirectory(UnixFile directory, long mode, int uid, int gid) {
+		private SecuredDirectory(PosixFile directory, long mode, int uid, int gid) {
 			this.directory=directory;
 			this.mode=mode;
 			this.uid=uid;
@@ -658,9 +658,9 @@ public class UnixFile {
 		int gid_min
 	) throws IOException {
 		// Build a stack of all parents
-		Stack<UnixFile> parents=new Stack<>();
+		Stack<PosixFile> parents=new Stack<>();
 		{
-			UnixFile parent=getParent();
+			PosixFile parent=getParent();
 			while(!parent.isRootDirectory()) {
 				parents.push(parent);
 				parent=parent.getParent();
@@ -668,7 +668,7 @@ public class UnixFile {
 		}
 		// Set any necessary permissions from root to file's immediate parent while looking for symbolic links
 		while(!parents.isEmpty()) {
-			UnixFile parent = parents.pop();
+			PosixFile parent = parents.pop();
 			Stat parentStat = parent.getStat();
 			long statMode = parentStat.getRawMode();
 			if(isSymLink(statMode)) throw new IOException("Symbolic link found in path: "+parent.path);
@@ -713,7 +713,7 @@ public class UnixFile {
 	 *
 	 * Java 1.8: Can do this in a pure Java way
 	 *
-	 * @see  #secureDeleteRecursive(com.aoindustries.io.unix.UnixFile)
+	 * @see  #secureDeleteRecursive(com.aoapps.io.posix.PosixFile)
 	 */
 	final public void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<>();
@@ -728,7 +728,7 @@ public class UnixFile {
 	/**
 	 * @see  #secureDeleteRecursive(int, int)
 	 */
-	private static void secureDeleteRecursive(UnixFile file) throws IOException {
+	private static void secureDeleteRecursive(PosixFile file) throws IOException {
 		try {
 			Stat stat = file.getStat();
 			long mode=stat.getRawMode();
@@ -741,7 +741,7 @@ public class UnixFile {
 				if (list != null) {
 					int len = list.length;
 					for (int c = 0; c < len; c++) {
-						secureDeleteRecursive(new UnixFile(file, list[c]));
+						secureDeleteRecursive(new PosixFile(file, list[c]));
 					}
 				}
 			}
@@ -857,7 +857,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * Gets the <code>File</code> for this <code>UnixFile</code>.
+	 * Gets the <code>File</code> for this <code>PosixFile</code>.
 	 * Not synchronized because multiple instantiation is acceptable.
 	 */
 	final public File getFile() {
@@ -866,7 +866,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * Gets the path for this <code>UnixFile</code>.
+	 * Gets the path for this <code>PosixFile</code>.
 	 *
 	 * @deprecated  the use of the word <code>filename</code> is misleading since it represents the entire path, please use <code>getPath()</code> instead.
 	 * @see  #getPath()
@@ -877,7 +877,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * Gets the path for this <code>UnixFile</code>.
+	 * Gets the path for this <code>PosixFile</code>.
 	 */
 	final public String getPath() {
 		return path;
@@ -940,7 +940,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * Gets a String representation of a mode similar to the output of the Unix ls command.
+	 * Gets a String representation of a mode similar to the output of the POSIX <code>ls</code> command.
 	 */
 	public static String getModeString(long mode) {
 		StringBuilder SB=new StringBuilder(10);
@@ -968,7 +968,7 @@ public class UnixFile {
 	}
 
 	/**
-	 * Gets a String representation of the mode of this file similar to the output of the Unix ls command.
+	 * Gets a String representation of the mode of this file similar to the output of the POSIX <code>ls</code> command.
 	 *
 	 * This method will follow symbolic links in the path but not a final symbolic link.
 	 *
@@ -1058,10 +1058,10 @@ public class UnixFile {
 	 * Gets the parent of this file or <code>null</code> if it doesn't have a parent.
 	 * Not synchronized because multiple instantiation is acceptable.
 	 */
-	final public UnixFile getParent() {
+	final public PosixFile getParent() {
 		if(_parent==null) {
 			File parentFile = getFile().getParentFile();
-			if(parentFile!=null) _parent = new UnixFile(parentFile);
+			if(parentFile!=null) _parent = new PosixFile(parentFile);
 		}
 		return _parent;
 	}
@@ -1120,14 +1120,14 @@ public class UnixFile {
 	 * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}.
 	 */
 	@Deprecated
-	public static UnixFile mktemp(String template) throws IOException {
+	public static PosixFile mktemp(String template) throws IOException {
 		try {
 			String path = template + "XXXXXXXXXX";
 			checkWrite(path);
 			loadLibrary();
-			return new UnixFile(mktemp0(path));
+			return new PosixFile(mktemp0(path));
 		} catch(IOException err) {
-			if(logger.isLoggable(Level.FINER)) logger.finer("UnixFile.mktemp: IOException: template=" + template);
+			if(logger.isLoggable(Level.FINER)) logger.finer("PosixFile.mktemp: IOException: template=" + template);
 			throw err;
 		}
 	}
@@ -1139,12 +1139,12 @@ public class UnixFile {
 	 * This method will follow symbolic links in the path but not final links.
 	 *
 	 * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}
-	 *              or <a href="https://oss.aoapps.com/tempfiles/apidocs/com/aoindustries/tempfiles/TempFileContext.html">TempFileContext</a>
+	 *              or <a href="https://oss.aoapps.com/tempfiles/apidocs/com/aoapps/tempfiles/TempFileContext.html">TempFileContext</a>
 	 *              as {@link File#deleteOnExit()} is prone to memory leaks in long-running applications.
 	 */
 	@Deprecated
-	public static UnixFile mktemp(String template, boolean deleteOnExit) throws IOException {
-		UnixFile uf = mktemp(template);
+	public static PosixFile mktemp(String template, boolean deleteOnExit) throws IOException {
+		PosixFile uf = mktemp(template);
 		if(deleteOnExit) uf.getFile().deleteOnExit();
 		return uf;
 	}
@@ -1338,7 +1338,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile mkdir() throws IOException {
+	final public PosixFile mkdir() throws IOException {
 		if(!getFile().mkdir()) throw new IOException("Unable to make directory: " + path);
 		return this;
 	}
@@ -1349,10 +1349,10 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile mkdir(boolean makeParents, long mode) throws IOException {
+	final public PosixFile mkdir(boolean makeParents, long mode) throws IOException {
 		if(makeParents) {
-			UnixFile dir=getParent();
-			Stack<UnixFile> neededParents=new Stack<>();
+			PosixFile dir=getParent();
+			Stack<PosixFile> neededParents=new Stack<>();
 			while(!dir.isRootDirectory() && !dir.getStat().exists()) {
 				neededParents.push(dir);
 				dir=dir.getParent();
@@ -1371,10 +1371,10 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
+	final public PosixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
 		if(makeParents) {
-			UnixFile dir=getParent();
-			Stack<UnixFile> neededParents=new Stack<>();
+			PosixFile dir=getParent();
+			Stack<PosixFile> neededParents=new Stack<>();
 			while(!dir.isRootDirectory() && !dir.getStat().exists()) {
 				neededParents.push(dir);
 				dir=dir.getParent();
@@ -1392,7 +1392,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile mknod(long mode, long device) throws IOException {
+	final public PosixFile mknod(long mode, long device) throws IOException {
 		checkWrite();
 		loadLibrary();
 		mknod0(path, mode, device);
@@ -1406,7 +1406,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile mkfifo(long mode) throws IOException {
+	final public PosixFile mkfifo(long mode) throws IOException {
 		checkWrite();
 		loadLibrary();
 		mkfifo0(path, mode&PERMISSION_MASK);
@@ -1423,7 +1423,7 @@ public class UnixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public UnixFile setAccessTime(long atime) throws IOException {
+	final public PosixFile setAccessTime(long atime) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		long mtime = getStat().getModifyTime();
@@ -1439,7 +1439,7 @@ public class UnixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public UnixFile setGID(int gid) throws IOException {
+	final public PosixFile setGID(int gid) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		int uid = getStat().getUid();
@@ -1452,7 +1452,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile setMode(long mode) throws IOException {
+	final public PosixFile setMode(long mode) throws IOException {
 		checkWrite();
 		loadLibrary();
 		setMode0(path, mode & PERMISSION_MASK);
@@ -1469,7 +1469,7 @@ public class UnixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public UnixFile setModifyTime(long mtime) throws IOException {
+	final public PosixFile setModifyTime(long mtime) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		long atime = getStat().getAccessTime();
@@ -1485,7 +1485,7 @@ public class UnixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public UnixFile setUID(int uid) throws IOException {
+	final public PosixFile setUID(int uid) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		int gid = getStat().getGid();
@@ -1498,7 +1498,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile symLink(String destination) throws IOException {
+	final public PosixFile symLink(String destination) throws IOException {
 		checkWrite();
 		loadLibrary();
 		symLink0(path, destination);
@@ -1512,7 +1512,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile link(UnixFile destination) throws IOException {
+	final public PosixFile link(PosixFile destination) throws IOException {
 		return link(destination.getPath());
 	}
 
@@ -1521,7 +1521,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile link(String destination) throws IOException {
+	final public PosixFile link(String destination) throws IOException {
 		checkWrite();
 		loadLibrary();
 		link0(path, destination);
@@ -1550,7 +1550,7 @@ public class UnixFile {
 	 *
 	 * @see File#renameTo(File)
 	 */
-	final public void renameTo(UnixFile uf) throws IOException {
+	final public void renameTo(PosixFile uf) throws IOException {
 		FileUtils.rename(getFile(), uf.getFile());
 	}
 
@@ -1564,7 +1564,7 @@ public class UnixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public UnixFile utime(long atime, long mtime) throws IOException {
+	final public PosixFile utime(long atime, long mtime) throws IOException {
 		checkWrite();
 		loadLibrary();
 		utime0(path, atime, mtime);
@@ -1582,8 +1582,8 @@ public class UnixFile {
 	public boolean equals(Object O) {
 		return
 			O!=null
-			&& (O instanceof UnixFile)
-			&& ((UnixFile) O).path.equals(path)
+			&& (O instanceof PosixFile)
+			&& ((PosixFile) O).path.equals(path)
 		;
 	}
 }

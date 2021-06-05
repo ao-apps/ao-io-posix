@@ -24,7 +24,7 @@
 #include <jni.h>
 #include "aocode_shared.h"
 #include "jni_util.h"
-#include "com_aoindustries_io_unix_UnixFile.h"
+#include "com_aoapps_io_posix_PosixFile.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -38,11 +38,11 @@
 extern int errno;
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    chown0
  * Signature: (Ljava/lang/String;II)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_chown0(JNIEnv* env, jclass cls, jstring jfilename, jint uid, jint gid) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_PosixFile_chown0(JNIEnv* env, jclass cls, jstring jfilename, jint uid, jint gid) {
 	jclass newExcCls=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
 	if(filename!=NULL) {
@@ -54,11 +54,11 @@ JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_chown0(JNIEnv* env
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    getStat0
- * Signature: (Ljava/lang/String;)Lcom/aoindustries/io/unix/Stat;
+ * Signature: (Ljava/lang/String;)Lcom/aoapps/io/posix/Stat;
  */
-JNIEXPORT jobject JNICALL Java_com_aoindustries_io_unix_UnixFile_getStat0(JNIEnv* env, jobject jthis, jstring jfilename) {
+JNIEXPORT jobject JNICALL Java_com_aoapps_io_posix_PosixFile_getStat0(JNIEnv* env, jobject jthis, jstring jfilename) {
 	jclass newExcCls=NULL;
 	jobject stat=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
@@ -113,11 +113,11 @@ JNIEXPORT jobject JNICALL Java_com_aoindustries_io_unix_UnixFile_getStat0(JNIEnv
 			} else newExcCls=(*env)->FindClass(env, getErrorType(errno));
 			free(buff);
 			if(newExcCls==NULL) {
-				jclass statClass=(*env)->FindClass(env, "com/aoindustries/io/unix/Stat");
+				jclass statClass=(*env)->FindClass(env, "com/aoapps/io/posix/Stat");
 				if(statClass!=NULL) {
 					if(exists == JNI_FALSE) {
 						// not exists, return the static field
-						jfieldID field = (*env)->GetStaticFieldID(env, statClass, "NOT_EXISTS", "Lcom/aoindustries/io/unix/Stat;");
+						jfieldID field = (*env)->GetStaticFieldID(env, statClass, "NOT_EXISTS", "Lcom/aoapps/io/posix/Stat;");
 						if(field!=NULL) {
 							stat = (*env)->GetStaticObjectField(env, statClass, field);
 						}
@@ -156,11 +156,11 @@ JNIEXPORT jobject JNICALL Java_com_aoindustries_io_unix_UnixFile_getStat0(JNIEnv
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    crypt0
  * Signature: (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_aoindustries_io_unix_UnixFile_crypt0(JNIEnv* env, jclass cls, jstring jpassword, jstring jsalt) {
+JNIEXPORT jstring JNICALL Java_com_aoapps_io_posix_PosixFile_crypt0(JNIEnv* env, jclass cls, jstring jpassword, jstring jsalt) {
 	jclass newExcCls=NULL;
 	jstring jcrypted=NULL;
 	const char* password=(*env)->GetStringUTFChars(env, jpassword, NULL);
@@ -179,11 +179,11 @@ JNIEXPORT jstring JNICALL Java_com_aoindustries_io_unix_UnixFile_crypt0(JNIEnv* 
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    mktemp0
  * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_aoindustries_io_unix_UnixFile_mktemp0(JNIEnv* env, jclass cls , jstring jtemplate) {
+JNIEXPORT jstring JNICALL Java_com_aoapps_io_posix_PosixFile_mktemp0(JNIEnv* env, jclass cls , jstring jtemplate) {
 	jclass newExcCls=NULL;
 	jstring jfilename=NULL;
 	const char* template=getString8859_1Chars(env, jtemplate);
@@ -209,11 +209,11 @@ JNIEXPORT jstring JNICALL Java_com_aoindustries_io_unix_UnixFile_mktemp0(JNIEnv*
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    mknod0
  * Signature: (Ljava/lang/String;JJ)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_mknod0(JNIEnv* env, jclass cls, jstring jfilename, jlong mode, jlong device) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_PosixFile_mknod0(JNIEnv* env, jclass cls, jstring jfilename, jlong mode, jlong device) {
 	jclass newExcCls=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
 	if(filename!=NULL) {
@@ -225,11 +225,11 @@ JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_mknod0(JNIEnv* env
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    mkfifo0
  * Signature: (Ljava/lang/String;J)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_mkfifo0(JNIEnv* env, jclass cls, jstring jfilename, jlong mode) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_PosixFile_mkfifo0(JNIEnv* env, jclass cls, jstring jfilename, jlong mode) {
 	jclass newExcCls=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
 	if(filename!=NULL) {
@@ -241,11 +241,11 @@ JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_mkfifo0(JNIEnv* en
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    setMode0
  * Signature: (Ljava/lang/String;J)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_setMode0(JNIEnv* env, jclass cls, jstring jfilename, jlong mode) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_PosixFile_setMode0(JNIEnv* env, jclass cls, jstring jfilename, jlong mode) {
 	jclass newExcCls=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
 	if(filename!=NULL) {
@@ -257,11 +257,11 @@ JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_setMode0(JNIEnv* e
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    symLink0
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_symLink0(JNIEnv* env, jclass cls, jstring jfilename, jstring jdestination) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_PosixFile_symLink0(JNIEnv* env, jclass cls, jstring jfilename, jstring jdestination) {
 	jclass newExcCls=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
 	if(filename!=NULL) {
@@ -277,11 +277,11 @@ JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_symLink0(JNIEnv* e
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    link0
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_link0(JNIEnv* env, jclass cls, jstring jfilename, jstring jdestination) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_PosixFile_link0(JNIEnv* env, jclass cls, jstring jfilename, jstring jdestination) {
 	jclass newExcCls=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
 	if(filename!=NULL) {
@@ -297,11 +297,11 @@ JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_link0(JNIEnv* env,
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    readLink0
  * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_aoindustries_io_unix_UnixFile_readLink0(JNIEnv* env, jclass cls, jstring jfilename) {
+JNIEXPORT jstring JNICALL Java_com_aoapps_io_posix_PosixFile_readLink0(JNIEnv* env, jclass cls, jstring jfilename) {
 	jclass newExcCls=NULL;
 	jstring jdestination=NULL;
 	const char* filename=getString8859_1Chars(env, jfilename);
@@ -322,11 +322,11 @@ JNIEXPORT jstring JNICALL Java_com_aoindustries_io_unix_UnixFile_readLink0(JNIEn
 }
 
 /*
- * Class:     com_aoindustries_io_unix_UnixFile
+ * Class:     com_aoapps_io_posix_PosixFile
  * Method:    utime0
  * Signature: (Ljava/lang/String;JJ)V
  */
-JNIEXPORT void JNICALL Java_com_aoindustries_io_unix_UnixFile_utime0(JNIEnv* env, jclass cls, jstring jfilename, jlong atime, jlong mtime) {
+JNIEXPORT void JNICALL Java_com_aoapps_io_posix_PosixFile_utime0(JNIEnv* env, jclass cls, jstring jfilename, jlong atime, jlong mtime) {
 	jclass newExcCls = NULL;
 	struct utimbuf* times=(struct utimbuf*)malloc(sizeof(struct utimbuf));
 	if(times!=NULL) {
