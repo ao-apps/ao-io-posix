@@ -61,7 +61,7 @@ public class PosixFile {
 
 	/**
 	 * The UID of the root user.
-	 * 
+	 *
 	 * Note: Copied to LinuxServerAccount.java to avoid interproject dependency.
 	 */
 	public static final int ROOT_UID = 0;
@@ -1139,7 +1139,7 @@ public class PosixFile {
 	 * This method will follow symbolic links in the path but not final links.
 	 *
 	 * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}
-	 *              or <a href="https://oss.aoapps.com/tempfiles/apidocs/com/aoapps/tempfiles/TempFileContext.html">TempFileContext</a>
+	 *              or <a href="https://oss.aoapps.com/tempfiles/apidocs/com.aoapps.tempfiles/com/aoapps/tempfiles/TempFileContext.html">TempFileContext</a>
 	 *              as {@link File#deleteOnExit()} is prone to memory leaks in long-running applications.
 	 */
 	@Deprecated
