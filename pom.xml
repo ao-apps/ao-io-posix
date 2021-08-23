@@ -47,6 +47,8 @@ along with ao-io-posix.  If not, see <http://www.gnu.org/licenses />.
 		<sonar.projectKey>${project.groupId}:${project.artifactId}</sonar.projectKey>
 		<sonar.organization>aoindustries</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<!-- TODO: Implement tests -->
+		<sonar.coverage.exclusions>**.*</sonar.coverage.exclusions>
 		<!-- Don't try to compile libaocode.so -->
 		<sonar.c.file.suffixes>-</sonar.c.file.suffixes>
 	</properties>
