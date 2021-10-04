@@ -186,7 +186,7 @@ public class PosixFile {
 	public static final long IS_SOCKET = 0140000;
 
 	private static final Object libraryLock = new Object();
-	volatile private static boolean loaded=false;
+	private static volatile boolean loaded=false;
 	public static void loadLibrary() {
 		if(!loaded) {
 			synchronized(libraryLock) {
@@ -265,7 +265,7 @@ public class PosixFile {
 	 * Ensures that the calling thread is allowed to read this
 	 * <code>PosixFile</code> in any way.
 	 */
-	final public void checkRead() throws IOException {
+	public final void checkRead() throws IOException {
 		SecurityManager security=System.getSecurityManager();
 		if(security!=null) security.checkRead(getFile().getCanonicalPath());
 	}
@@ -274,7 +274,7 @@ public class PosixFile {
 	 * Ensures that the calling thread is allowed to read this
 	 * <code>path</code> in any way.
 	 */
-	static public void checkRead(String path) throws IOException {
+	public static void checkRead(String path) throws IOException {
 		SecurityManager security=System.getSecurityManager();
 		if(security!=null) security.checkRead(new File(path).getCanonicalPath());
 	}
@@ -283,7 +283,7 @@ public class PosixFile {
 	 * Ensures that the calling thread is allowed to write to or modify this
 	 * <code>PosixFile</code> in any way.
 	 */
-	final public void checkWrite() throws IOException {
+	public final void checkWrite() throws IOException {
 		SecurityManager security=System.getSecurityManager();
 		if(security!=null) security.checkWrite(getFile().getCanonicalPath());
 	}
@@ -292,7 +292,7 @@ public class PosixFile {
 	 * Ensures that the calling thread is allowed to write to or modify this
 	 * <code>path</code> in any way.
 	 */
-	static public void checkWrite(String path) throws IOException {
+	public static void checkWrite(String path) throws IOException {
 		SecurityManager security=System.getSecurityManager();
 		if(security!=null) security.checkWrite(new File(path).getCanonicalPath());
 	}
@@ -302,7 +302,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path but not a final symbolic link.
 	 */
-	final public PosixFile chown(int uid, int gid) throws IOException {
+	public final PosixFile chown(int uid, int gid) throws IOException {
 		checkWrite();
 		loadLibrary();
 		chown0(path, uid, gid);
@@ -587,7 +587,7 @@ public class PosixFile {
 	 *
 	 * @see  java.io.File#delete
 	 */
-	final public void delete() throws IOException {
+	public final void delete() throws IOException {
 		Files.delete(getFile().toPath());
 	}
 
@@ -599,7 +599,7 @@ public class PosixFile {
 	 *
 	 * @see  #deleteRecursive(com.aoapps.io.posix.PosixFile)
 	 */
-	final public void deleteRecursive() throws IOException {
+	public final void deleteRecursive() throws IOException {
 		deleteRecursive(this);
 	}
 
@@ -649,7 +649,7 @@ public class PosixFile {
 	/**
 	 * Java 1.8: Can do this in a pure Java way
 	 */
-	final public void secureParents(
+	public final void secureParents(
 		List<SecuredDirectory> parentsChanged,
 		int uid_min,
 		int gid_min
@@ -691,7 +691,7 @@ public class PosixFile {
 	/**
 	 * Java 1.8: Can do this in a pure Java way
 	 */
-	final public void restoreParents(List<SecuredDirectory> parentsChanged) throws IOException {
+	public final void restoreParents(List<SecuredDirectory> parentsChanged) throws IOException {
 		for(int c=parentsChanged.size()-1;c>=0;c--) {
 			SecuredDirectory directory=parentsChanged.get(c);
 			directory.directory.chown(directory.uid, directory.gid).setMode(directory.mode);
@@ -712,7 +712,7 @@ public class PosixFile {
 	 *
 	 * @see  #secureDeleteRecursive(com.aoapps.io.posix.PosixFile)
 	 */
-	final public void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
+	public final void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
@@ -758,7 +758,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).exists()
 	 */
 	@Deprecated
-	final public boolean exists() throws IOException {
+	public final boolean exists() throws IOException {
 		return getStat().exists();
 	}
 
@@ -770,7 +770,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getAccessTime()
 	 */
 	@Deprecated
-	final public long getAccessTime() throws IOException {
+	public final long getAccessTime() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getAccessTime();
@@ -784,7 +784,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(State).getBlockCount()
 	 */
 	@Deprecated
-	final public long getBlockCount() throws IOException {
+	public final long getBlockCount() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getBlockCount();
@@ -798,7 +798,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getBlockSize()
 	 */
 	@Deprecated
-	final public int getBlockSize() throws IOException {
+	public final int getBlockSize() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getBlockSize();
@@ -812,7 +812,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getChangeTime()
 	 */
 	@Deprecated
-	final public long getChangeTime() throws IOException {
+	public final long getChangeTime() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getChangeTime();
@@ -826,7 +826,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getDevice()
 	 */
 	@Deprecated
-	final public long getDevice() throws IOException {
+	public final long getDevice() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getDevice();
@@ -840,7 +840,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getDeviceIdentifier()
 	 */
 	@Deprecated
-	final public long getDeviceIdentifier() throws IOException {
+	public final long getDeviceIdentifier() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getDeviceIdentifier();
@@ -849,7 +849,7 @@ public class PosixFile {
 	/**
 	 * Gets the extension for this file.
 	 */
-	final public String getExtension() {
+	public final String getExtension() {
 		return FileUtils.getExtension(path);
 	}
 
@@ -857,7 +857,7 @@ public class PosixFile {
 	 * Gets the <code>File</code> for this <code>PosixFile</code>.
 	 * Not synchronized because multiple instantiation is acceptable.
 	 */
-	final public File getFile() {
+	public final File getFile() {
 		if (file == null) file = new File(path);
 		return file;
 	}
@@ -869,14 +869,14 @@ public class PosixFile {
 	 * @see  #getPath()
 	 */
 	@Deprecated
-	final public String getFilename() {
+	public final String getFilename() {
 		return path;
 	}
 
 	/**
 	 * Gets the path for this <code>PosixFile</code>.
 	 */
-	final public String getPath() {
+	public final String getPath() {
 		return path;
 	}
 
@@ -888,7 +888,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getGid()
 	 */
 	@Deprecated
-	final public int getGid() throws IOException {
+	public final int getGid() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getGid();
@@ -902,7 +902,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getInode()
 	 */
 	@Deprecated
-	final public long getInode() throws IOException {
+	public final long getInode() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getInode();
@@ -916,7 +916,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getNumberLinks()
 	 */
 	@Deprecated
-	final public int getLinkCount() throws IOException {
+	public final int getLinkCount() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getNumberLinks();
@@ -930,7 +930,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getMode()
 	 */
 	@Deprecated
-	final public long getMode() throws IOException {
+	public final long getMode() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getMode();
@@ -972,7 +972,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getModeString()
 	 */
 	@Deprecated
-	final public String getModeString() throws IOException {
+	public final String getModeString() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getModeString();
@@ -984,7 +984,7 @@ public class PosixFile {
 	 *
 	 * Java 1.8: Can do this in a pure Java way
 	 */
-	final public FileInputStream getSecureInputStream(int uid_min, int gid_min) throws IOException {
+	public final FileInputStream getSecureInputStream(int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
@@ -1008,7 +1008,7 @@ public class PosixFile {
 	 *
 	 * Java 1.8: Can do this in a pure Java way
 	 */
-	final public FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uid_min, int gid_min) throws IOException {
+	public final FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
@@ -1036,7 +1036,7 @@ public class PosixFile {
 	 *
 	 * Java 1.8: Can do this in a pure Java way
 	 */
-	final public RandomAccessFile getSecureRandomAccessFile(String mode, int uid_min, int gid_min) throws IOException {
+	public final RandomAccessFile getSecureRandomAccessFile(String mode, int uid_min, int gid_min) throws IOException {
 		List<SecuredDirectory> parentsChanged=new ArrayList<>();
 		try {
 			secureParents(parentsChanged, uid_min, gid_min);
@@ -1055,7 +1055,7 @@ public class PosixFile {
 	 * Gets the parent of this file or <code>null</code> if it doesn't have a parent.
 	 * Not synchronized because multiple instantiation is acceptable.
 	 */
-	final public PosixFile getParent() {
+	public final PosixFile getParent() {
 		if(_parent==null) {
 			File parentFile = getFile().getParentFile();
 			if(parentFile!=null) _parent = new PosixFile(parentFile);
@@ -1072,7 +1072,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getRawMode()
 	 */
 	@Deprecated
-	final public long getStatMode() throws IOException {
+	public final long getStatMode() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getRawMode();
@@ -1086,7 +1086,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getModifyTime()
 	 */
 	@Deprecated
-	final public long getModifyTime() throws IOException {
+	public final long getModifyTime() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getModifyTime();
@@ -1100,7 +1100,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).getSize()
 	 */
 	@Deprecated
-	final public long getSize() throws IOException {
+	public final long getSize() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.getSize();
@@ -1177,7 +1177,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).isBlockDevice()
 	 */
 	@Deprecated
-	final public boolean isBlockDevice() throws IOException {
+	public final boolean isBlockDevice() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.isBlockDevice();
@@ -1198,7 +1198,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).isCharacterDevice()
 	 */
 	@Deprecated
-	final public boolean isCharacterDevice() throws IOException {
+	public final boolean isCharacterDevice() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.isCharacterDevice();
@@ -1219,7 +1219,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).isDirectory()
 	 */
 	@Deprecated
-	final public boolean isDirectory() throws IOException {
+	public final boolean isDirectory() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.isDirectory();
@@ -1240,7 +1240,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).isFifo()
 	 */
 	@Deprecated
-	final public boolean isFifo() throws IOException {
+	public final boolean isFifo() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.isFifo();
@@ -1264,7 +1264,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).isRegularFile()
 	 */
 	@Deprecated
-	final public boolean isRegularFile() throws IOException {
+	public final boolean isRegularFile() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.isRegularFile();
@@ -1273,7 +1273,7 @@ public class PosixFile {
 	/**
 	 * Determines if this file is the root directory.
 	 */
-	final public boolean isRootDirectory() {
+	public final boolean isRootDirectory() {
 		return path.equals("/");
 	}
 
@@ -1292,7 +1292,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).isSocket()
 	 */
 	@Deprecated
-	final public boolean isSocket() throws IOException {
+	public final boolean isSocket() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.isSocket();
@@ -1313,7 +1313,7 @@ public class PosixFile {
 	 * @deprecated  Please use getStat(Stat).isSymLink()
 	 */
 	@Deprecated
-	final public boolean isSymLink() throws IOException {
+	public final boolean isSymLink() throws IOException {
 		Stat stat = getStat();
 		if(!stat.exists()) throw new FileNotFoundException(path);
 		return stat.isSymLink();
@@ -1326,7 +1326,7 @@ public class PosixFile {
 	 *
 	 * @see java.io.File#list
 	 */
-	final public String[] list() {
+	public final String[] list() {
 		return getFile().list();
 	}
 
@@ -1335,7 +1335,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile mkdir() throws IOException {
+	public final PosixFile mkdir() throws IOException {
 		if(!getFile().mkdir()) throw new IOException("Unable to make directory: " + path);
 		return this;
 	}
@@ -1346,7 +1346,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile mkdir(boolean makeParents, long mode) throws IOException {
+	public final PosixFile mkdir(boolean makeParents, long mode) throws IOException {
 		if(makeParents) {
 			PosixFile dir=getParent();
 			Stack<PosixFile> neededParents=new Stack<>();
@@ -1368,7 +1368,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
+	public final PosixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
 		if(makeParents) {
 			PosixFile dir=getParent();
 			Stack<PosixFile> neededParents=new Stack<>();
@@ -1389,7 +1389,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile mknod(long mode, long device) throws IOException {
+	public final PosixFile mknod(long mode, long device) throws IOException {
 		checkWrite();
 		loadLibrary();
 		mknod0(path, mode, device);
@@ -1403,7 +1403,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile mkfifo(long mode) throws IOException {
+	public final PosixFile mkfifo(long mode) throws IOException {
 		checkWrite();
 		loadLibrary();
 		mkfifo0(path, mode&PERMISSION_MASK);
@@ -1420,7 +1420,7 @@ public class PosixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public PosixFile setAccessTime(long atime) throws IOException {
+	public final PosixFile setAccessTime(long atime) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		long mtime = getStat().getModifyTime();
@@ -1436,7 +1436,7 @@ public class PosixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public PosixFile setGID(int gid) throws IOException {
+	public final PosixFile setGID(int gid) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		int uid = getStat().getUid();
@@ -1449,7 +1449,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile setMode(long mode) throws IOException {
+	public final PosixFile setMode(long mode) throws IOException {
 		checkWrite();
 		loadLibrary();
 		setMode0(path, mode & PERMISSION_MASK);
@@ -1466,7 +1466,7 @@ public class PosixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public PosixFile setModifyTime(long mtime) throws IOException {
+	public final PosixFile setModifyTime(long mtime) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		long atime = getStat().getAccessTime();
@@ -1482,7 +1482,7 @@ public class PosixFile {
 	 * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
 	 */
 	@Deprecated
-	final public PosixFile setUID(int uid) throws IOException {
+	public final PosixFile setUID(int uid) throws IOException {
 		checkWrite();
 		// getStat does loadLibrary already: loadLibrary();
 		int gid = getStat().getGid();
@@ -1495,21 +1495,21 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile symLink(String destination) throws IOException {
+	public final PosixFile symLink(String destination) throws IOException {
 		checkWrite();
 		loadLibrary();
 		symLink0(path, destination);
 		return this;
 	}
 
-	static native private void symLink0(String path, String destination) throws IOException;
+	private static native void symLink0(String path, String destination) throws IOException;
 
 	/**
 	 * Creates a hard link.
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile link(PosixFile destination) throws IOException {
+	public final PosixFile link(PosixFile destination) throws IOException {
 		return link(destination.getPath());
 	}
 
@@ -1518,27 +1518,27 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile link(String destination) throws IOException {
+	public final PosixFile link(String destination) throws IOException {
 		checkWrite();
 		loadLibrary();
 		link0(path, destination);
 		return this;
 	}
 
-	static native private void link0(String path, String destination) throws IOException;
+	private static native void link0(String path, String destination) throws IOException;
 
 	/**
 	 * Reads a symbolic link.
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public String readLink() throws IOException {
+	public final String readLink() throws IOException {
 		checkRead();
 		loadLibrary();
 		return readLink0(path);
 	}
 
-	static native private String readLink0(String path) throws IOException;
+	private static native String readLink0(String path) throws IOException;
 
 	/**
 	 * Renames this file, possibly overwriting any previous file.
@@ -1547,12 +1547,12 @@ public class PosixFile {
 	 *
 	 * @see File#renameTo(File)
 	 */
-	final public void renameTo(PosixFile uf) throws IOException {
+	public final void renameTo(PosixFile uf) throws IOException {
 		FileUtils.rename(getFile(), uf.getFile());
 	}
 
 	@Override
-	final public String toString() {
+	public final String toString() {
 		return path;
 	}
 
@@ -1561,7 +1561,7 @@ public class PosixFile {
 	 *
 	 * This method will follow symbolic links in the path.
 	 */
-	final public PosixFile utime(long atime, long mtime) throws IOException {
+	public final PosixFile utime(long atime, long mtime) throws IOException {
 		checkWrite();
 		loadLibrary();
 		utime0(path, atime, mtime);
