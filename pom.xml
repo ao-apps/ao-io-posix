@@ -212,7 +212,7 @@ along with ao-io-posix.  If not, see <http://www.gnu.org/licenses />.
 		<dependencies>
 			<!-- Direct -->
 			<dependency>
-				<groupId>com.aoapps</groupId><artifactId>ao-lang</artifactId><version>5.1.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+				<groupId>com.aoapps</groupId><artifactId>ao-lang</artifactId><version>5.1.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<!-- Test Direct -->
 			<dependency>
