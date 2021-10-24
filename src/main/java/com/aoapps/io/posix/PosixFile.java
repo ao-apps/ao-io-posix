@@ -940,17 +940,17 @@ public class PosixFile {
 	 * Gets a String representation of a mode similar to the output of the POSIX <code>ls</code> command.
 	 */
 	public static String getModeString(long mode) {
-		StringBuilder SB=new StringBuilder(10);
-		if(isFifo(mode)) SB.append('p');
-		else if(isCharacterDevice(mode)) SB.append('c');
-		else if(isDirectory(mode)) SB.append('d');
-		else if(isBlockDevice(mode)) SB.append('b');
-		else if(isRegularFile(mode)) SB.append('-');
-		else if(isSymLink(mode)) SB.append('l');
-		else if(isSocket(mode)) SB.append('s');
+		StringBuilder sb = new StringBuilder(10);
+		if(isFifo(mode)) sb.append('p');
+		else if(isCharacterDevice(mode)) sb.append('c');
+		else if(isDirectory(mode)) sb.append('d');
+		else if(isBlockDevice(mode)) sb.append('b');
+		else if(isRegularFile(mode)) sb.append('-');
+		else if(isSymLink(mode)) sb.append('l');
+		else if(isSocket(mode)) sb.append('s');
 		else throw new IllegalArgumentException("Unknown mode type: "+Long.toOctalString(mode));
 
-		return SB
+		return sb
 			.append((mode&USER_READ)!=0?'r':'-')
 			.append((mode&USER_WRITE)!=0?'w':'-')
 			.append((mode&USER_EXECUTE)!=0?((mode&SET_UID)!=0?'s':'x'):((mode&SET_UID)!=0?'S':'-'))
