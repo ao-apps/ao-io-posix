@@ -1576,11 +1576,10 @@ public class PosixFile {
 	}
 
 	@Override
-	public boolean equals(Object O) {
+	public boolean equals(Object obj) {
 		return
-			O!=null
-			&& (O instanceof PosixFile)
-			&& ((PosixFile) O).path.equals(path)
+			(obj instanceof PosixFile)
+			&& ((PosixFile)obj).path.equals(path)
 		;
 	}
 }
