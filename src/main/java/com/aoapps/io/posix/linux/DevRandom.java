@@ -23,6 +23,7 @@
 package com.aoapps.io.posix.linux;
 
 import com.aoapps.io.posix.PosixFile;
+import com.aoapps.lang.Throwables;
 import com.aoapps.lang.util.ErrorPrinter;
 import java.io.BufferedReader;
 import java.io.EOFException;
@@ -186,7 +187,7 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				err.addSuppressed(err2);
+				if(err2 != err && !Throwables.isSuppressed(err, err2)) err.addSuppressed(err2);
 			}
 			throw new UncheckedIOException(err);
 		}
@@ -200,7 +201,7 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				err.addSuppressed(err2);
+				if(err2 != err && !Throwables.isSuppressed(err, err2)) err.addSuppressed(err2);
 			}
 			throw new UncheckedIOException(err);
 		}
@@ -257,7 +258,7 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				err.addSuppressed(err2);
+				if(err2 != err && !Throwables.isSuppressed(err, err2)) err.addSuppressed(err2);
 			}
 			throw new UncheckedIOException(err);
 		}
@@ -285,7 +286,7 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				err.addSuppressed(err2);
+				if(err2 != err && !Throwables.isSuppressed(err, err2)) err.addSuppressed(err2);
 			}
 			throw new UncheckedIOException(err);
 		}
@@ -325,7 +326,7 @@ public class DevRandom extends Random {
 			try {
 				closeDevRandomIn();
 			} catch(IOException err2) {
-				err.addSuppressed(err2);
+				if(err2 != err && !Throwables.isSuppressed(err, err2)) err.addSuppressed(err2);
 			}
 			throw new UncheckedIOException(err);
 		}
