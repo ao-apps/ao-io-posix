@@ -19,7 +19,7 @@
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with ao-io-posix.  If not, see <http://www.gnu.org/licenses/>.
+# along with ao-io-posix.  If not, see <https://www.gnu.org/licenses/>.
 #
 gcc -D_FILE_OFFSET_BITS=64 \
 	-fPIC \
