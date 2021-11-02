@@ -35,9 +35,9 @@ import java.util.Random;
 
 /**
  * This class acts as a direct source of Random data from <code>/dev/random</code> on Linux
- * platforms.  Many of these calls are platform specific and use the included <code>libaocode.so</code>
+ * platforms.  Many of these calls are platform-specific and use the included <code>libaocode.so</code>
  * Linux shared library provided as a resource.  The source code is also supplied.
- * Please note that reading will block if random data is not available.  Use only
+ * Please note that reading will block when random data is not available.  Use only
  * where the highest quality random data is required and possible delays are acceptable.
  *
  * @author  AO Industries, Inc.
@@ -49,37 +49,38 @@ public class DevRandom extends Random {
 	/**
 	 * The device file path used to obtain and add random data.
 	 */
-	public static final String DEV_RANDOM_PATH="/dev/random";
+	public static final String DEV_RANDOM_PATH = "/dev/random";
 
 	/**
 	 * The device file used to obtain and add random data.
 	 */
-	public static final PosixFile devRandomUF=new PosixFile(DEV_RANDOM_PATH);
+	public static final PosixFile devRandomUF = new PosixFile(DEV_RANDOM_PATH);
 
 	/**
 	 * The access to the device file.
 	 */
 	private static FileInputStream devRandomIn;
-	private static final Object devRandomInLock=new Object();
+	private static final Object devRandomInLock = new Object();
 
 	/**
-	 * Opens the <code>FileInputStream</code> that reads from <code>/dev/random</code>.
+	 * Opens the {@link FileInputStream} that reads from <code>/dev/random</code>.
 	 */
+	// TODO: Return wrapped in NoCloseInputStream, or just removed this shared instance entirely
 	public static FileInputStream openDevRandomIn() throws IOException {
 		synchronized(devRandomInLock) {
-			if(devRandomIn==null) devRandomIn=new FileInputStream(devRandomUF.getFile());
+			if(devRandomIn == null) devRandomIn = new FileInputStream(devRandomUF.getFile());
 			return devRandomIn;
 		}
 	}
 
 	/**
-	 * Closes the <code>FileInputStream</code> that reads from <code>/dev/random</code>.
+	 * Closes the {@link FileInputStream} that reads from <code>/dev/random</code>.
 	 */
 	public static void closeDevRandomIn() throws IOException {
 		synchronized(devRandomInLock) {
-			FileInputStream in=devRandomIn;
-			if(in!=null) {
-				devRandomIn=null;
+			FileInputStream in = devRandomIn;
+			if(in != null) {
+				devRandomIn = null;
 				in.close();
 			}
 		}
@@ -88,12 +89,12 @@ public class DevRandom extends Random {
 	/**
 	 * The device file path used to obtain the entropy statistics.
 	 */
-	public static final String ENTROPY_AVAIL_PATH="/proc/sys/kernel/random/entropy_avail";
+	public static final String ENTROPY_AVAIL_PATH = "/proc/sys/kernel/random/entropy_avail";
 
 	/**
 	 * The device file used to obtain the entropy statistics.
 	 */
-	public static final PosixFile entropyAvailUF=new PosixFile(ENTROPY_AVAIL_PATH);
+	public static final PosixFile entropyAvailUF = new PosixFile(ENTROPY_AVAIL_PATH);
 
 	/**
 	 * Gets the number of random bits currently available in the kernel.
