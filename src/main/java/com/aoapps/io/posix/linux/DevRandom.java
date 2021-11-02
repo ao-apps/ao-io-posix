@@ -339,7 +339,7 @@ public class DevRandom extends Random {
 	@SuppressWarnings("UseOfSystemOutOrSystemErr")
 	public static void main(String[] args) {
 		try {
-			byte[] buff=new byte[16];
+			byte[] buff = new byte[16];
 			int ret;
 			while((ret=System.in.read(buff, 0, 16))!=-1) {
 				if(ret!=16) {
