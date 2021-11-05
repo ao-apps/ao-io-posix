@@ -155,9 +155,6 @@ public class DevRandom extends Random {
 
 	private static native void addEntropy0(byte[] randomData) throws IOException;
 
-	public DevRandom() {
-	}
-
 	/**
 	 * This class does not use this seed value.
 	 */
