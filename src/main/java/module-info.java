@@ -1,6 +1,6 @@
 /*
  * ao-io-posix - Java interface to native POSIX filesystem objects.
- * Copyright (C) 2021  AO Industries, Inc.
+ * Copyright (C) 2021, 2022  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -21,10 +21,10 @@
  * along with ao-io-posix.  If not, see <https://www.gnu.org/licenses/>.
  */
 module com.aoapps.io.posix {
-	exports com.aoapps.io.posix;
-	exports com.aoapps.io.posix.linux;
-	// Direct
-	requires com.aoapps.lang; // <groupId>com.aoapps</groupId><artifactId>ao-lang</artifactId>
-	// Java SE
-	requires java.logging;
+  exports com.aoapps.io.posix;
+  exports com.aoapps.io.posix.linux;
+  // Direct
+  requires com.aoapps.lang; // <groupId>com.aoapps</groupId><artifactId>ao-lang</artifactId>
+  // Java SE
+  requires java.logging;
 }

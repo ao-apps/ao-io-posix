@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # ao-io-posix - Java interface to native POSIX filesystem objects.
-# Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2015, 2021  AO Industries, Inc.
+# Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2015, 2021, 2022  AO Industries, Inc.
 #     support@aoindustries.com
 #     7262 Bull Pen Cir
 #     Mobile, AL 36695
@@ -22,14 +22,14 @@
 # along with ao-io-posix.  If not, see <https://www.gnu.org/licenses/>.
 #
 gcc -D_FILE_OFFSET_BITS=64 \
-	-fPIC \
-	-O2 \
-	-shared -lcrypt \
-	-I/opt/jdk1.8.0/include \
-	-I/opt/jdk1.8.0/include/linux \
-	-o libaocode.so \
-	aocode_shared.c \
-	jni_util.c \
-	com_aoapps_io_posix_PosixFile.c \
-	linux/com_aoapps_io_posix_linux_DevRandom.c || exit "$?"
+  -fPIC \
+  -O2 \
+  -shared -lcrypt \
+  -I/opt/jdk1.8.0/include \
+  -I/opt/jdk1.8.0/include/linux \
+  -o libaocode.so \
+  aocode_shared.c \
+  jni_util.c \
+  com_aoapps_io_posix_PosixFile.c \
+  linux/com_aoapps_io_posix_linux_DevRandom.c || exit "$?"
 strip libaocode.so || exit "$?"
