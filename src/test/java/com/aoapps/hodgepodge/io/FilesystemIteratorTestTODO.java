@@ -95,9 +95,9 @@ public class FilesystemIteratorTestTODO extends TestCase {
     Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
     List<String> expectedResults = new ArrayList<>();
     doTest(
-      rules,
-      prefixRules,
-      expectedResults
+        rules,
+        prefixRules,
+        expectedResults
     );
   }
 
@@ -108,43 +108,43 @@ public class FilesystemIteratorTestTODO extends TestCase {
     expectedResults.add("/");
     expectedResults.add("/tmp");
     expectedResults.add(tempDir.getPath());
-    expectedResults.add(tempDir.getPath()+"/home");
-    expectedResults.add(tempDir.getPath()+"/home/a");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/badlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/brokenlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something2");
-    expectedResults.add(tempDir.getPath()+"/tmp");
-    expectedResults.add(tempDir.getPath()+"/tmp/something");
+    expectedResults.add(tempDir.getPath() + "/home");
+    expectedResults.add(tempDir.getPath() + "/home/a");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/badlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/brokenlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something2");
+    expectedResults.add(tempDir.getPath() + "/tmp");
+    expectedResults.add(tempDir.getPath() + "/tmp/something");
     doTest(
-      rules,
-      prefixRules,
-      expectedResults
+        rules,
+        prefixRules,
+        expectedResults
     );
   }
 
   public void testIncludeDirectoryAndSkipContents() throws IOException {
     Map<String, FilesystemIteratorRule> rules = new HashMap<>();
     rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
-    rules.put(tempDir.getPath()+"/tmp/", FilesystemIteratorRule.SKIP);
+    rules.put(tempDir.getPath() + "/tmp/", FilesystemIteratorRule.SKIP);
     Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
     List<String> expectedResults = new ArrayList<>();
     expectedResults.add("/");
     expectedResults.add("/tmp");
     expectedResults.add(tempDir.getPath());
-    expectedResults.add(tempDir.getPath()+"/home");
-    expectedResults.add(tempDir.getPath()+"/home/a");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/badlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/brokenlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something2");
-    expectedResults.add(tempDir.getPath()+"/tmp");
+    expectedResults.add(tempDir.getPath() + "/home");
+    expectedResults.add(tempDir.getPath() + "/home/a");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/badlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/brokenlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something2");
+    expectedResults.add(tempDir.getPath() + "/tmp");
     doTest(
-      rules,
-      prefixRules,
-      expectedResults
+        rules,
+        prefixRules,
+        expectedResults
     );
   }
 
@@ -152,26 +152,26 @@ public class FilesystemIteratorTestTODO extends TestCase {
     Map<String, FilesystemIteratorRule> rules = new HashMap<>();
     rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
     rules.put(
-      tempDir.getPath()+"/home/a/aoadmin/something",
-      new FileExistsRule(new String[] {tempDir.getPath()+"/home/a/aoadmin/something2"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
+        tempDir.getPath() + "/home/a/aoadmin/something",
+        new FileExistsRule(new String[]{tempDir.getPath() + "/home/a/aoadmin/something2"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
     );
     Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
     List<String> expectedResults = new ArrayList<>();
     expectedResults.add("/");
     expectedResults.add("/tmp");
     expectedResults.add(tempDir.getPath());
-    expectedResults.add(tempDir.getPath()+"/home");
-    expectedResults.add(tempDir.getPath()+"/home/a");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/badlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/brokenlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something2");
-    expectedResults.add(tempDir.getPath()+"/tmp");
-    expectedResults.add(tempDir.getPath()+"/tmp/something");
+    expectedResults.add(tempDir.getPath() + "/home");
+    expectedResults.add(tempDir.getPath() + "/home/a");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/badlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/brokenlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something2");
+    expectedResults.add(tempDir.getPath() + "/tmp");
+    expectedResults.add(tempDir.getPath() + "/tmp/something");
     doTest(
-      rules,
-      prefixRules,
-      expectedResults
+        rules,
+        prefixRules,
+        expectedResults
     );
   }
 
@@ -179,27 +179,27 @@ public class FilesystemIteratorTestTODO extends TestCase {
     Map<String, FilesystemIteratorRule> rules = new HashMap<>();
     rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
     rules.put(
-      tempDir.getPath()+"/home/a/aoadmin/something",
-      new FileExistsRule(new String[] {tempDir.getPath()+"/home/a/aoadmin/somethingNotHere"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
+        tempDir.getPath() + "/home/a/aoadmin/something",
+        new FileExistsRule(new String[]{tempDir.getPath() + "/home/a/aoadmin/somethingNotHere"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
     );
     Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
     List<String> expectedResults = new ArrayList<>();
     expectedResults.add("/");
     expectedResults.add("/tmp");
     expectedResults.add(tempDir.getPath());
-    expectedResults.add(tempDir.getPath()+"/home");
-    expectedResults.add(tempDir.getPath()+"/home/a");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/badlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/brokenlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something2");
-    expectedResults.add(tempDir.getPath()+"/tmp");
-    expectedResults.add(tempDir.getPath()+"/tmp/something");
+    expectedResults.add(tempDir.getPath() + "/home");
+    expectedResults.add(tempDir.getPath() + "/home/a");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/badlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/brokenlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something2");
+    expectedResults.add(tempDir.getPath() + "/tmp");
+    expectedResults.add(tempDir.getPath() + "/tmp/something");
     doTest(
-      rules,
-      prefixRules,
-      expectedResults
+        rules,
+        prefixRules,
+        expectedResults
     );
   }
 
@@ -207,27 +207,27 @@ public class FilesystemIteratorTestTODO extends TestCase {
     Map<String, FilesystemIteratorRule> rules = new HashMap<>();
     rules.put(tempDir.getPath(), FilesystemIteratorRule.OK);
     rules.put(
-      tempDir.getPath()+"/home/a/aoadmin/something",
-      new FileExistsRule(new String[] {tempDir.getPath()+"/home/a/aoadmin/brokenlink"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
+        tempDir.getPath() + "/home/a/aoadmin/something",
+        new FileExistsRule(new String[]{tempDir.getPath() + "/home/a/aoadmin/brokenlink"}, FilesystemIteratorRule.SKIP, FilesystemIteratorRule.OK)
     );
     Map<String, FilesystemIteratorRule> prefixRules = Collections.emptyMap();
     List<String> expectedResults = new ArrayList<>();
     expectedResults.add("/");
     expectedResults.add("/tmp");
     expectedResults.add(tempDir.getPath());
-    expectedResults.add(tempDir.getPath()+"/home");
-    expectedResults.add(tempDir.getPath()+"/home/a");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/badlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/brokenlink");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something");
-    expectedResults.add(tempDir.getPath()+"/home/a/aoadmin/something2");
-    expectedResults.add(tempDir.getPath()+"/tmp");
-    expectedResults.add(tempDir.getPath()+"/tmp/something");
+    expectedResults.add(tempDir.getPath() + "/home");
+    expectedResults.add(tempDir.getPath() + "/home/a");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/badlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/brokenlink");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something");
+    expectedResults.add(tempDir.getPath() + "/home/a/aoadmin/something2");
+    expectedResults.add(tempDir.getPath() + "/tmp");
+    expectedResults.add(tempDir.getPath() + "/tmp/something");
     doTest(
-      rules,
-      prefixRules,
-      expectedResults
+        rules,
+        prefixRules,
+        expectedResults
     );
   }
 
@@ -235,54 +235,54 @@ public class FilesystemIteratorTestTODO extends TestCase {
    * Performs the test against expected results.
    */
   private void doTest(
-    Map<String, FilesystemIteratorRule> rules,
-    Map<String, FilesystemIteratorRule> prefixRules,
-    List<String> expectedResults
+      Map<String, FilesystemIteratorRule> rules,
+      Map<String, FilesystemIteratorRule> prefixRules,
+      List<String> expectedResults
   ) throws IOException {
     FilesystemIterator iterator = new FilesystemIterator(
-      rules,
-      prefixRules
+        rules,
+        prefixRules
     );
     List<String> results = new ArrayList<>();
     File file;
-    while ((file=iterator.getNextFile()) != null) {
+    while ((file = iterator.getNextFile()) != null) {
       results.add(file.getPath());
     }
     int widestExpected = 8;
     for (String S : expectedResults) {
       int len = S.length();
-      if (len>widestExpected) {
+      if (len > widestExpected) {
         widestExpected = len;
       }
     }
     int widestActual = 6;
     for (String S : results) {
       int len = S.length();
-      if (len>widestActual) {
+      if (len > widestActual) {
         widestActual = len;
       }
     }
     int longerList = Math.max(expectedResults.size(), results.size());
     System.out.print("Expected");
-    for (int d=8;d<widestExpected;d++) {
+    for (int d = 8; d < widestExpected; d++) {
       System.out.print(' ');
     }
     System.out.print(' ');
     System.out.print("Actual");
-    for (int d=6;d<widestActual;d++) {
+    for (int d = 6; d < widestActual; d++) {
       System.out.print(' ');
     }
     System.out.println();
-    for (int c=0;c<longerList;c++) {
-      String expected = c<expectedResults.size() ? expectedResults.get(c) : "";
+    for (int c = 0; c < longerList; c++) {
+      String expected = c < expectedResults.size() ? expectedResults.get(c) : "";
       System.out.print(expected);
-      for (int d=expected.length();d<widestExpected;d++) {
+      for (int d = expected.length(); d < widestExpected; d++) {
         System.out.print(' ');
       }
       System.out.print(' ');
-      String actual = c<results.size() ? results.get(c) : "";
+      String actual = c < results.size() ? results.get(c) : "";
       System.out.print(actual);
-      for (int d=actual.length();d<widestActual;d++) {
+      for (int d = actual.length(); d < widestActual; d++) {
         System.out.print(' ');
       }
       System.out.println();

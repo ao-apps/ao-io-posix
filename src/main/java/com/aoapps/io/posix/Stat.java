@@ -38,20 +38,20 @@ public class Stat {
    * A stat that represents a non-existent file.
    */
   public static final Stat NOT_EXISTS = new Stat(
-    false,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+      false,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
   );
 
   private final boolean exists;
@@ -70,20 +70,20 @@ public class Stat {
   private final long changeTime;
 
   public Stat(
-    boolean exists,
-    long device,
-    long inode,
-    long mode,
-    int numberLinks,
-    int uid,
-    int gid,
-    long deviceIdentifier,
-    long size,
-    int blockSize,
-    long blockCount,
-    long accessTime,
-    long modifyTime,
-    long changeTime
+      boolean exists,
+      long device,
+      long inode,
+      long mode,
+      int numberLinks,
+      int uid,
+      int gid,
+      long deviceIdentifier,
+      long size,
+      int blockSize,
+      long blockCount,
+      long accessTime,
+      long modifyTime,
+      long changeTime
   ) {
     this.exists = exists;
     this.device = device;

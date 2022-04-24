@@ -187,13 +187,14 @@ public class PosixFile {
   public static final long IS_SOCKET = 0140000;
 
   private static final Object libraryLock = new Object();
-  private static volatile boolean loaded=false;
+  private static volatile boolean loaded = false;
+
   public static void loadLibrary() {
     if (!loaded) {
       synchronized (libraryLock) {
         if (!loaded) {
           System.loadLibrary("aocode");
-          loaded=true;
+          loaded = true;
         }
       }
     }
@@ -238,7 +239,7 @@ public class PosixFile {
       }
     }
     if (parent.path.equals("/")) {
-      this.path = checkPath(parent.path+path);
+      this.path = checkPath(parent.path + path);
     } else {
       this.path = checkPath(parent.path + '/' + path);
     }
@@ -249,7 +250,7 @@ public class PosixFile {
       throw new NullPointerException("file is null");
     }
     this.path = checkPath(file.getPath());
-    this.file=file;
+    this.file = file;
   }
 
   public PosixFile(File parent, String filename) {
@@ -262,7 +263,7 @@ public class PosixFile {
 
   public PosixFile(String parent, String filename) {
     if (parent.equals("/")) {
-      this.path = checkPath(parent+filename);
+      this.path = checkPath(parent + filename);
     } else {
       this.path = checkPath(parent + '/' + filename);
     }
@@ -273,7 +274,7 @@ public class PosixFile {
    * <code>PosixFile</code> in any way.
    */
   public final void checkRead() throws IOException {
-    SecurityManager security=System.getSecurityManager();
+    SecurityManager security = System.getSecurityManager();
     if (security != null) {
       security.checkRead(getFile().getCanonicalPath());
     }
@@ -284,7 +285,7 @@ public class PosixFile {
    * <code>path</code> in any way.
    */
   public static void checkRead(String path) throws IOException {
-    SecurityManager security=System.getSecurityManager();
+    SecurityManager security = System.getSecurityManager();
     if (security != null) {
       security.checkRead(new File(path).getCanonicalPath());
     }
@@ -295,7 +296,7 @@ public class PosixFile {
    * <code>PosixFile</code> in any way.
    */
   public final void checkWrite() throws IOException {
-    SecurityManager security=System.getSecurityManager();
+    SecurityManager security = System.getSecurityManager();
     if (security != null) {
       security.checkWrite(getFile().getCanonicalPath());
     }
@@ -306,7 +307,7 @@ public class PosixFile {
    * <code>path</code> in any way.
    */
   public static void checkWrite(String path) throws IOException {
-    SecurityManager security=System.getSecurityManager();
+    SecurityManager security = System.getSecurityManager();
     if (security != null) {
       security.checkWrite(new File(path).getCanonicalPath());
     }
@@ -347,27 +348,27 @@ public class PosixFile {
   public boolean contentEquals(PosixFile otherUF) throws IOException {
     Stat stat = getStat();
     if (!stat.isRegularFile()) {
-      throw new IOException("Not a regular file: "+path);
+      throw new IOException("Not a regular file: " + path);
     }
     Stat otherStat = otherUF.getStat();
     if (!otherStat.isRegularFile()) {
-      throw new IOException("Not a regular file: "+otherUF.path);
+      throw new IOException("Not a regular file: " + otherUF.path);
     }
-    long size=stat.getSize();
+    long size = stat.getSize();
     if (size != otherStat.getSize()) {
       return false;
     }
-    int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
-    if (buffSize<64) {
-      buffSize=64;
+    int buffSize = size < BufferManager.BUFFER_SIZE ? (int) size : BufferManager.BUFFER_SIZE;
+    if (buffSize < 64) {
+      buffSize = 64;
     }
     try (
       InputStream in1 = new BufferedInputStream(new FileInputStream(getFile()), buffSize);
       InputStream in2 = new BufferedInputStream(new FileInputStream(otherUF.getFile()), buffSize)
-    ) {
+        ) {
       while (true) {
-        int b1=in1.read();
-        int b2=in2.read();
+        int b1 = in1.read();
+        int b2 = in2.read();
         if (b1 != b2) {
           return false;
         }
@@ -387,7 +388,7 @@ public class PosixFile {
   public boolean contentEquals(byte[] otherFile) throws IOException {
     Stat stat = getStat();
     if (!stat.isRegularFile()) {
-      throw new IOException("Not a regular file: "+path);
+      throw new IOException("Not a regular file: " + path);
     }
     return FileUtils.contentEquals(getFile(), otherFile);
   }
@@ -402,27 +403,27 @@ public class PosixFile {
   public boolean secureContentEquals(PosixFile otherUF, int uid_min, int gid_min) throws IOException {
     Stat stat = getStat();
     if (!stat.isRegularFile()) {
-      throw new IOException("Not a regular file: "+path);
+      throw new IOException("Not a regular file: " + path);
     }
     Stat otherStat = otherUF.getStat();
     if (!otherStat.isRegularFile()) {
-      throw new IOException("Not a regular file: "+otherUF.path);
+      throw new IOException("Not a regular file: " + otherUF.path);
     }
-    long size=stat.getSize();
+    long size = stat.getSize();
     if (size != otherStat.getSize()) {
       return false;
     }
-    int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
-    if (buffSize<64) {
-      buffSize=64;
+    int buffSize = size < BufferManager.BUFFER_SIZE ? (int) size : BufferManager.BUFFER_SIZE;
+    if (buffSize < 64) {
+      buffSize = 64;
     }
     try (
       InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize);
       InputStream in2 = new BufferedInputStream(otherUF.getSecureInputStream(uid_min, gid_min), buffSize)
-    ) {
+        ) {
       while (true) {
-        int b1=in1.read();
-        int b2=in2.read();
+        int b1 = in1.read();
+        int b2 = in2.read();
         if (b1 != b2) {
           return false;
         }
@@ -444,20 +445,20 @@ public class PosixFile {
   public boolean secureContentEquals(byte[] otherFile, int uid_min, int gid_min) throws IOException {
     Stat stat = getStat();
     if (!stat.isRegularFile()) {
-      throw new IOException("Not a regular file: "+path);
+      throw new IOException("Not a regular file: " + path);
     }
-    long size=stat.getSize();
+    long size = stat.getSize();
     if (size != otherFile.length) {
       return false;
     }
-    int buffSize=size<BufferManager.BUFFER_SIZE?(int)size:BufferManager.BUFFER_SIZE;
-    if (buffSize<64) {
-      buffSize=64;
+    int buffSize = size < BufferManager.BUFFER_SIZE ? (int) size : BufferManager.BUFFER_SIZE;
+    if (buffSize < 64) {
+      buffSize = 64;
     }
     try (InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize)) {
-      for (int c=0;c<otherFile.length;c++) {
-        int b1=in1.read();
-        int b2=otherFile[c]&0xff;
+      for (int c = 0; c < otherFile.length; c++) {
+        int b1 = in1.read();
+        int b2 = otherFile[c] & 0xff;
         if (b1 != b2) {
           return false;
         }
@@ -481,11 +482,11 @@ public class PosixFile {
     checkRead();
     otherUF.checkWrite();
     Stat stat = getStat();
-    long mode=stat.getRawMode();
+    long mode = stat.getRawMode();
     Stat otherStat = otherUF.getStat();
-    boolean oExists=otherStat.exists();
+    boolean oExists = otherStat.exists();
     if (!overwrite && oExists) {
-      throw new IOException("File already exists: "+otherUF);
+      throw new IOException("File already exists: " + otherUF);
     }
     if (isBlockDevice(mode) || isCharacterDevice(mode)) {
       if (oExists) {
@@ -506,17 +507,17 @@ public class PosixFile {
       try (
         InputStream in = new FileInputStream(getFile());
         OutputStream out = new FileOutputStream(otherUF.getFile())
-      ) {
+          ) {
         otherUF.setMode(mode).chown(stat.getUid(), stat.getGid());
         IoUtils.copy(in, out);
       }
     } else if (isSocket(mode)) {
-      throw new IOException("Unable to copy socket: "+path);
+      throw new IOException("Unable to copy socket: " + path);
     } else if (isSymLink(mode)) {
       // This takes the byte[] from readLink directory to symLink to avoid conversions from byte[]->String->byte[]
       otherUF.symLink(readLink()).chown(stat.getUid(), stat.getGid());
     } else {
-      throw new RuntimeException("Unknown mode type: "+Long.toOctalString(mode));
+      throw new RuntimeException("Unknown mode type: " + Long.toOctalString(mode));
     }
   }
 
@@ -529,13 +530,13 @@ public class PosixFile {
      * @deprecated This is the old-school weakest form, do not use unless somehow absolutely required.
      */
     @Deprecated // Java 9: (forRemoval = false)
-    DES("", 2),
+      DES("", 2),
 
     /**
      * @deprecated As of glibc 2.7, prefer the stronger {@link #SHA256} and {@link #SHA512} alternatives.
      */
     @Deprecated // Java 9: (forRemoval = false)
-    MD5("$1$", 8),
+        MD5("$1$", 8),
 
     /**
      * SHA-256 algorithm requires glibc 2.7+.
@@ -576,11 +577,11 @@ public class PosixFile {
       for (int c = 0; c < saltLength; c++) {
         int num = secureRandom.nextInt(64);
         if (num < 10) {
-          salt.append((char)(num + '0'));
+          salt.append((char) (num + '0'));
         } else if (num < 36) {
-          salt.append((char)(num - 10 + 'A'));
+          salt.append((char) (num - 10 + 'A'));
         } else if (num < 62) {
-          salt.append((char)(num - 36 + 'a'));
+          salt.append((char) (num - 36 + 'a'));
         } else if (num == 62) {
           salt.append('.');
         } else {
@@ -629,8 +630,8 @@ public class PosixFile {
   // TODO: Take Password instances from ao-security instead?
   public static String crypt(String password, CryptAlgorithm algorithm, SecureRandom secureRandom) {
     return crypt(
-      password,
-      algorithm.generateSalt(secureRandom)
+        password,
+        algorithm.generateSalt(secureRandom)
     );
   }
 
@@ -719,10 +720,10 @@ public class PosixFile {
     private final int gid;
 
     private SecuredDirectory(PosixFile directory, long mode, int uid, int gid) {
-      this.directory=directory;
-      this.mode=mode;
-      this.uid=uid;
-      this.gid=gid;
+      this.directory = directory;
+      this.mode = mode;
+      this.uid = uid;
+      this.gid = gid;
     }
   }
 
@@ -730,17 +731,17 @@ public class PosixFile {
    * TODO: Java 1.8: Can do this in a pure Java way
    */
   public final void secureParents(
-    List<SecuredDirectory> parentsChanged,
-    int uid_min,
-    int gid_min
+      List<SecuredDirectory> parentsChanged,
+      int uid_min,
+      int gid_min
   ) throws IOException {
     // Build a stack of all parents
-    Stack<PosixFile> parents=new Stack<>();
+    Stack<PosixFile> parents = new Stack<>();
     {
-      PosixFile parent=getParent();
+      PosixFile parent = getParent();
       while (!parent.isRootDirectory()) {
         parents.push(parent);
-        parent=parent.getParent();
+        parent = parent.getParent();
       }
     }
     // Set any necessary permissions from root to file's immediate parent while looking for symbolic links
@@ -749,22 +750,22 @@ public class PosixFile {
       Stat parentStat = parent.getStat();
       long statMode = parentStat.getRawMode();
       if (isSymLink(statMode)) {
-        throw new IOException("Symbolic link found in path: "+parent.path);
+        throw new IOException("Symbolic link found in path: " + parent.path);
       }
-      int uid=parentStat.getUid();
-      int gid=parentStat.getGid();
+      int uid = parentStat.getUid();
+      int gid = parentStat.getGid();
       if (
-        uid >= uid_min
-        || gid >= gid_min
-        || (statMode&(OTHER_WRITE|SET_GID|SET_UID)) != 0
+          uid >= uid_min
+              || gid >= gid_min
+              || (statMode & (OTHER_WRITE | SET_GID | SET_UID)) != 0
       ) {
         parentsChanged.add(new SecuredDirectory(parent, statMode, uid, gid));
         parent
-          .setMode(statMode&(NOT_OTHER_WRITE & NOT_SET_GID & NOT_SET_UID))
-          .chown(
-            uid >= uid_min ? ROOT_UID : uid,
-            gid >= gid_min ? ROOT_GID : gid
-          )
+            .setMode(statMode & (NOT_OTHER_WRITE & NOT_SET_GID & NOT_SET_UID))
+            .chown(
+                uid >= uid_min ? ROOT_UID : uid,
+                gid >= gid_min ? ROOT_GID : gid
+            )
         ;
       }
     }
@@ -774,8 +775,8 @@ public class PosixFile {
    * TODO: Java 1.8: Can do this in a pure Java way
    */
   public final void restoreParents(List<SecuredDirectory> parentsChanged) throws IOException {
-    for (int c=parentsChanged.size()-1;c >= 0;c--) {
-      SecuredDirectory directory=parentsChanged.get(c);
+    for (int c = parentsChanged.size() - 1; c >= 0; c--) {
+      SecuredDirectory directory = parentsChanged.get(c);
       directory.directory.chown(directory.uid, directory.gid).setMode(directory.mode);
     }
   }
@@ -795,7 +796,7 @@ public class PosixFile {
    * @see  #secureDeleteRecursive(com.aoapps.io.posix.PosixFile)
    */
   public final void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
-    List<SecuredDirectory> parentsChanged=new ArrayList<>();
+    List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
       secureParents(parentsChanged, uid_min, gid_min);
       secureDeleteRecursive(this);
@@ -810,7 +811,7 @@ public class PosixFile {
   private static void secureDeleteRecursive(PosixFile file) throws IOException {
     try {
       Stat stat = file.getStat();
-      long mode=stat.getRawMode();
+      long mode = stat.getRawMode();
       // Race condition does not exist because the parents have been secured already
       if (!isSymLink(mode) && isDirectory(mode)) {
         // Secure the current directory before the recursive calls
@@ -1066,20 +1067,20 @@ public class PosixFile {
     } else if (isSocket(mode)) {
       sb.append('s');
     } else {
-      throw new IllegalArgumentException("Unknown mode type: "+Long.toOctalString(mode));
+      throw new IllegalArgumentException("Unknown mode type: " + Long.toOctalString(mode));
     }
 
     return sb
-      .append((mode&USER_READ) != 0?'r':'-')
-      .append((mode&USER_WRITE) != 0?'w':'-')
-      .append((mode&USER_EXECUTE) != 0?((mode&SET_UID) != 0?'s':'x'):((mode&SET_UID) != 0?'S':'-'))
-      .append((mode&GROUP_READ) != 0?'r':'-')
-      .append((mode&GROUP_WRITE) != 0?'w':'-')
-      .append((mode&GROUP_EXECUTE) != 0?((mode&SET_GID) != 0?'s':'x'):((mode&SET_GID) != 0?'S':'-'))
-      .append((mode&OTHER_READ) != 0?'r':'-')
-      .append((mode&OTHER_WRITE) != 0?'w':'-')
-      .append((mode&OTHER_EXECUTE) != 0?((mode&SAVE_TEXT_IMAGE) != 0?'t':'x'):((mode&SAVE_TEXT_IMAGE) != 0?'T':'-'))
-      .toString()
+        .append((mode & USER_READ) != 0 ? 'r' : '-')
+        .append((mode & USER_WRITE) != 0 ? 'w' : '-')
+        .append((mode & USER_EXECUTE) != 0 ? ((mode & SET_UID) != 0 ? 's' : 'x') : ((mode & SET_UID) != 0 ? 'S' : '-'))
+        .append((mode & GROUP_READ) != 0 ? 'r' : '-')
+        .append((mode & GROUP_WRITE) != 0 ? 'w' : '-')
+        .append((mode & GROUP_EXECUTE) != 0 ? ((mode & SET_GID) != 0 ? 's' : 'x') : ((mode & SET_GID) != 0 ? 'S' : '-'))
+        .append((mode & OTHER_READ) != 0 ? 'r' : '-')
+        .append((mode & OTHER_WRITE) != 0 ? 'w' : '-')
+        .append((mode & OTHER_EXECUTE) != 0 ? ((mode & SAVE_TEXT_IMAGE) != 0 ? 't' : 'x') : ((mode & SAVE_TEXT_IMAGE) != 0 ? 'T' : '-'))
+        .toString()
     ;
   }
 
@@ -1106,13 +1107,13 @@ public class PosixFile {
    * TODO: Java 1.8: Can do this in a pure Java way
    */
   public final FileInputStream getSecureInputStream(int uid_min, int gid_min) throws IOException {
-    List<SecuredDirectory> parentsChanged=new ArrayList<>();
+    List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
       secureParents(parentsChanged, uid_min, gid_min);
 
       // Make sure the file does not exist
       if (!getStat().isRegularFile()) {
-        throw new IOException("Not a regular file: "+path);
+        throw new IOException("Not a regular file: " + path);
       }
 
       // Create the new file with the correct owner and permissions
@@ -1132,7 +1133,7 @@ public class PosixFile {
    * TODO: Java 1.8: Can do this in a pure Java way
    */
   public final FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uid_min, int gid_min) throws IOException {
-    List<SecuredDirectory> parentsChanged=new ArrayList<>();
+    List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
       secureParents(parentsChanged, uid_min, gid_min);
 
@@ -1140,16 +1141,16 @@ public class PosixFile {
       Stat stat = getStat();
       if (overwrite) {
         if (stat.exists() && !stat.isRegularFile()) {
-          throw new IOException("Not a regular file: "+path);
+          throw new IOException("Not a regular file: " + path);
         }
       } else {
         if (stat.exists()) {
-          throw new IOException("File already exists: "+path);
+          throw new IOException("File already exists: " + path);
         }
       }
 
       // Create the new file with the correct owner and permissions
-      FileOutputStream out=new FileOutputStream(getFile());
+      FileOutputStream out = new FileOutputStream(getFile());
       chown(uid, gid).setMode(mode);
       return out;
     } finally {
@@ -1164,13 +1165,13 @@ public class PosixFile {
    * TODO: Java 1.8: Can do this in a pure Java way
    */
   public final RandomAccessFile getSecureRandomAccessFile(String mode, int uid_min, int gid_min) throws IOException {
-    List<SecuredDirectory> parentsChanged=new ArrayList<>();
+    List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
       secureParents(parentsChanged, uid_min, gid_min);
 
       // Make sure the file does not exist
       if (!getStat().isRegularFile()) {
-        throw new IOException("Not a regular file: "+path);
+        throw new IOException("Not a regular file: " + path);
       }
 
       // Create the new file with the correct owner and permissions
@@ -1249,7 +1250,7 @@ public class PosixFile {
    *
    * This method will follow symbolic links in the path but not final links.
    *
-   * @see  #mktemp(String,boolean)
+   * @see  #mktemp(String, boolean)
    *
    * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}.
    */
@@ -1402,8 +1403,8 @@ public class PosixFile {
    */
   public static boolean isRegularFile(long mode) {
     return
-      (mode & TYPE_MASK) == IS_REGULAR_FILE
-      || (mode & TYPE_MASK) == 0
+        (mode & TYPE_MASK) == IS_REGULAR_FILE
+            || (mode & TYPE_MASK) == 0
     ;
   }
 
@@ -1507,14 +1508,14 @@ public class PosixFile {
    */
   public final PosixFile mkdir(boolean makeParents, long mode) throws IOException {
     if (makeParents) {
-      PosixFile dir=getParent();
-      Stack<PosixFile> neededParents=new Stack<>();
+      PosixFile dir = getParent();
+      Stack<PosixFile> neededParents = new Stack<>();
       while (!dir.isRootDirectory() && !dir.getStat().exists()) {
         neededParents.push(dir);
-        dir=dir.getParent();
+        dir = dir.getParent();
       }
       while (!neededParents.isEmpty()) {
-        dir=neededParents.pop();
+        dir = neededParents.pop();
         dir.mkdir().setMode(mode);
       }
     }
@@ -1529,14 +1530,14 @@ public class PosixFile {
    */
   public final PosixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
     if (makeParents) {
-      PosixFile dir=getParent();
-      Stack<PosixFile> neededParents=new Stack<>();
+      PosixFile dir = getParent();
+      Stack<PosixFile> neededParents = new Stack<>();
       while (!dir.isRootDirectory() && !dir.getStat().exists()) {
         neededParents.push(dir);
-        dir=dir.getParent();
+        dir = dir.getParent();
       }
       while (!neededParents.isEmpty()) {
-        dir=neededParents.pop();
+        dir = neededParents.pop();
         dir.mkdir().setMode(mode).chown(uid, gid);
       }
     }
@@ -1565,7 +1566,7 @@ public class PosixFile {
   public final PosixFile mkfifo(long mode) throws IOException {
     checkWrite();
     loadLibrary();
-    mkfifo0(path, mode&PERMISSION_MASK);
+    mkfifo0(path, mode & PERMISSION_MASK);
     return this;
   }
 
@@ -1737,8 +1738,8 @@ public class PosixFile {
   @Override
   public boolean equals(Object obj) {
     return
-      (obj instanceof PosixFile)
-      && ((PosixFile)obj).path.equals(path)
+        (obj instanceof PosixFile)
+            && ((PosixFile) obj).path.equals(path)
     ;
   }
 }

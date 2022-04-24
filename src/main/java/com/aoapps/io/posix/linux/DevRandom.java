@@ -104,14 +104,14 @@ public class DevRandom extends Random {
    */
   public static int getEntropyAvail() throws IOException {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(entropyAvailUF.getFile())))) {
-      String line=in.readLine();
+      String line = in.readLine();
       if (line == null) {
-        throw new EOFException("EOF when reading from "+ENTROPY_AVAIL_PATH);
+        throw new EOFException("EOF when reading from " + ENTROPY_AVAIL_PATH);
       }
       try {
         return Integer.parseInt(line.trim());
       } catch (NumberFormatException err) {
-        throw new IOException("Unable to parse the output of "+ENTROPY_AVAIL_PATH+": "+line, err);
+        throw new IOException("Unable to parse the output of " + ENTROPY_AVAIL_PATH + ": " + line, err);
       }
     }
   }
@@ -119,24 +119,24 @@ public class DevRandom extends Random {
   /**
    * The device file path used to obtain the pool size.
    */
-  public static final String POOL_SIZE_PATH="/proc/sys/kernel/random/poolsize";
+  public static final String POOL_SIZE_PATH = "/proc/sys/kernel/random/poolsize";
 
   /**
    * The device file used to obtain the pool size.
    */
-  public static final PosixFile poolSizeUF=new PosixFile(POOL_SIZE_PATH);
+  public static final PosixFile poolSizeUF = new PosixFile(POOL_SIZE_PATH);
 
   /**
    * Gets the number of bits in the random pool in the kernel.
    */
   public static int getPoolSize() throws IOException {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(poolSizeUF.getFile())))) {
-      String line=in.readLine();
+      String line = in.readLine();
       if (line == null) {
-        throw new EOFException("EOF when reading from "+POOL_SIZE_PATH);
+        throw new EOFException("EOF when reading from " + POOL_SIZE_PATH);
       }
       try {
-        return Integer.parseInt(line.trim())*8;
+        return Integer.parseInt(line.trim()) * 8;
       } catch (NumberFormatException err) {
         throw new IOException("Unable to parse the output of " + POOL_SIZE_PATH + ": " + line, err);
       }
@@ -146,13 +146,13 @@ public class DevRandom extends Random {
   /**
    * Entropy addition is serialized.
    */
-  private static final Object addEntropyLock=new Object();
+  private static final Object addEntropyLock = new Object();
 
   /**
    * Adds random entropy to the kernel.
    */
   public static void addEntropy(byte[] randomData) throws IOException {
-    SecurityManager security=System.getSecurityManager();
+    SecurityManager security = System.getSecurityManager();
     if (security != null) {
       security.checkRead(DEV_RANDOM_PATH);
     }
@@ -175,20 +175,20 @@ public class DevRandom extends Random {
   @Override
   protected int next(int bits) {
     try {
-      int result=0;
+      int result = 0;
       if (bits >= 8) {
-        FileInputStream in=openDevRandomIn();
+        FileInputStream in = openDevRandomIn();
         while (bits >= 8) {
-          int next=in.read();
+          int next = in.read();
           if (next == -1) {
-            throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+            throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
           }
-          result=(result<<8)|next;
-          bits-=8;
+          result = (result << 8) | next;
+          bits -= 8;
         }
       }
       while (bits >= 1) {
-        result=(result<<1)|(nextBoolean0()?1:0);
+        result = (result << 1) | (nextBoolean0() ? 1 : 0);
         bits--;
       }
       return result;
@@ -223,22 +223,22 @@ public class DevRandom extends Random {
   /**
    * The extra bits read from the random source are stored here temporarily.
    */
-  private int extraBits=0;
-  private int numExtraBits=0;
-  private final Object extraBitsLock=new Object();
+  private int extraBits = 0;
+  private int numExtraBits = 0;
+  private final Object extraBitsLock = new Object();
 
   private boolean nextBoolean0() throws IOException {
     synchronized (extraBitsLock) {
       if (numExtraBits <= 0) {
-        FileInputStream in=openDevRandomIn();
-        int next=in.read();
+        FileInputStream in = openDevRandomIn();
+        int next = in.read();
         if (next == -1) {
-          throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+          throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
         }
-        extraBits=next;
-        numExtraBits=8;
+        extraBits = next;
+        numExtraBits = 8;
       }
-      boolean result=(extraBits&1) != 0;
+      boolean result = (extraBits & 1) != 0;
       extraBits >>>= 1;
       numExtraBits--;
       return result;
@@ -260,15 +260,15 @@ public class DevRandom extends Random {
 
   public static void nextBytesStatic(byte[] bytes, int off, int len) {
     try {
-      if (len>0) {
-        FileInputStream in=openDevRandomIn();
-        while (len>0) {
-          int ret=in.read(bytes, off, len);
+      if (len > 0) {
+        FileInputStream in = openDevRandomIn();
+        while (len > 0) {
+          int ret = in.read(bytes, off, len);
           if (ret == -1) {
-            throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+            throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
           }
-          off+=ret;
-          len-=ret;
+          off += ret;
+          len -= ret;
         }
       }
     } catch (IOException err) {
@@ -286,28 +286,28 @@ public class DevRandom extends Random {
   @Override
   public int nextInt() {
     try {
-      FileInputStream in=openDevRandomIn();
-      int b1=in.read();
+      FileInputStream in = openDevRandomIn();
+      int b1 = in.read();
       if (b1 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      int b2=in.read();
+      int b2 = in.read();
       if (b2 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      int b3=in.read();
+      int b3 = in.read();
       if (b3 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      int b4=in.read();
+      int b4 = in.read();
       if (b4 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
       return
-        (b1<<24)
-        | (b2<<16)
-        | (b3<<8)
-        | b4
+          (b1 << 24)
+              | (b2 << 16)
+              | (b3 << 8)
+              | b4
       ;
     } catch (IOException err) {
       try {
@@ -324,48 +324,48 @@ public class DevRandom extends Random {
   @Override
   public long nextLong() {
     try {
-      FileInputStream in=openDevRandomIn();
-      long b1=in.read();
+      FileInputStream in = openDevRandomIn();
+      long b1 = in.read();
       if (b1 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      long b2=in.read();
+      long b2 = in.read();
       if (b2 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      long b3=in.read();
+      long b3 = in.read();
       if (b3 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      long b4=in.read();
+      long b4 = in.read();
       if (b4 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      long b5=in.read();
+      long b5 = in.read();
       if (b5 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      long b6=in.read();
+      long b6 = in.read();
       if (b6 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      long b7=in.read();
+      long b7 = in.read();
       if (b7 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
-      long b8=in.read();
+      long b8 = in.read();
       if (b8 == -1) {
-        throw new EOFException("EOF when reading from "+DEV_RANDOM_PATH);
+        throw new EOFException("EOF when reading from " + DEV_RANDOM_PATH);
       }
       return
-        (b1<<56)
-        | (b2<<48)
-        | (b3<<40)
-        | (b4<<32)
-        | (b5<<24)
-        | (b6<<16)
-        | (b7<<8)
-        | b8
+          (b1 << 56)
+              | (b2 << 48)
+              | (b3 << 40)
+              | (b4 << 32)
+              | (b5 << 24)
+              | (b6 << 16)
+              | (b7 << 8)
+              | b8
       ;
     } catch (IOException err) {
       try {
@@ -387,9 +387,9 @@ public class DevRandom extends Random {
     try {
       byte[] buff = new byte[16];
       int ret;
-      while ((ret=System.in.read(buff, 0, 16)) != -1) {
+      while ((ret = System.in.read(buff, 0, 16)) != -1) {
         if (ret != 16) {
-          byte[] newBuff=new byte[ret];
+          byte[] newBuff = new byte[ret];
           System.arraycopy(buff, 0, newBuff, 0, ret);
           DevRandom.addEntropy(newBuff);
         } else {
