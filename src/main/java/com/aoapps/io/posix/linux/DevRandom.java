@@ -223,8 +223,8 @@ public class DevRandom extends Random {
   /**
    * The extra bits read from the random source are stored here temporarily.
    */
-  private int extraBits = 0;
-  private int numExtraBits = 0;
+  private int extraBits;
+  private int numExtraBits;
   private final Object extraBitsLock = new Object();
 
   private boolean nextBoolean0() throws IOException {

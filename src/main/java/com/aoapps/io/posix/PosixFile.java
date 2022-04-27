@@ -187,7 +187,7 @@ public class PosixFile {
   public static final long IS_SOCKET = 0140000;
 
   private static final Object libraryLock = new Object();
-  private static volatile boolean loaded = false;
+  private static volatile boolean loaded;
 
   public static void loadLibrary() {
     if (!loaded) {
@@ -238,7 +238,7 @@ public class PosixFile {
         throw new IOException("parent is not a directory: " + parent.path);
       }
     }
-    if (parent.path.equals("/")) {
+    if ("/".equals(parent.path)) {
       this.path = checkPath(parent.path + path);
     } else {
       this.path = checkPath(parent.path + '/' + path);
@@ -262,7 +262,7 @@ public class PosixFile {
   }
 
   public PosixFile(String parent, String filename) {
-    if (parent.equals("/")) {
+    if ("/".equals(parent)) {
       this.path = checkPath(parent + filename);
     } else {
       this.path = checkPath(parent + '/' + filename);
@@ -1428,7 +1428,7 @@ public class PosixFile {
    * Determines if this file is the root directory.
    */
   public final boolean isRootDirectory() {
-    return path.equals("/");
+    return "/".equals(path);
   }
 
   /**
