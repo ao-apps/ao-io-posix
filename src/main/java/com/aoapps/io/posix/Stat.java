@@ -69,6 +69,9 @@ public class Stat {
   private final long modifyTime;
   private final long changeTime;
 
+  /**
+   * Creates a new stat given all the values.
+   */
   public Stat(
       boolean exists,
       long device,

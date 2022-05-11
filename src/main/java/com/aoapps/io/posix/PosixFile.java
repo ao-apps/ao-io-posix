@@ -59,8 +59,9 @@ public class PosixFile {
 
   /**
    * The UID of the root user.
-   *
+   * <p>
    * Note: Copied to LinuxServerAccount.java to avoid interproject dependency.
+   * </p>
    */
   public static final int ROOT_UID = 0;
 
@@ -189,6 +190,9 @@ public class PosixFile {
   private static final Object libraryLock = new Object();
   private static volatile boolean loaded;
 
+  /**
+   * Loads the shared library native code <code>libaocode.so</code>.
+   */
   public static void loadLibrary() {
     if (!loaded) {
       synchronized (libraryLock) {
@@ -206,7 +210,7 @@ public class PosixFile {
   protected final String path;
 
   private File file; // TODO: volatile?
-  private PosixFile _parent; // TODO: volatile?
+  private PosixFile parentPosixFile; // TODO: volatile?
 
   private static String checkPath(String path) {
     if (path.indexOf(0) != -1) {
@@ -216,7 +220,10 @@ public class PosixFile {
   }
 
   /**
+   * Creates a new POSIX file.
+   * <p>
    * Strictly requires the parent to be a directory if it exists.
+   * </p>
    *
    * @deprecated  Please call #PosixFile(PosixFile,String,boolean) to explicitly control whether strict parent checking is performed
    */
@@ -226,7 +233,9 @@ public class PosixFile {
   }
 
   /**
-   * When strictly checking, a parent must be a directory if it exists.
+   * Creates a new POSIX file.
+   *
+   * @param strict  When strictly checking, a parent must be a directory if it exists.
    */
   public PosixFile(PosixFile parent, String path, boolean strict) throws IOException {
     if (parent == null) {
@@ -245,6 +254,9 @@ public class PosixFile {
     }
   }
 
+  /**
+   * Creates a new POSIX file.
+   */
   public PosixFile(File file) {
     if (file == null) {
       throw new NullPointerException("file is null");
@@ -253,14 +265,23 @@ public class PosixFile {
     this.file = file;
   }
 
+  /**
+   * Creates a new POSIX file.
+   */
   public PosixFile(File parent, String filename) {
     this(parent.getPath(), filename);
   }
 
+  /**
+   * Creates a new POSIX file.
+   */
   public PosixFile(String path) {
     this.path = checkPath(path);
   }
 
+  /**
+   * Creates a new POSIX file.
+   */
   public PosixFile(String parent, String filename) {
     if ("/".equals(parent)) {
       this.path = checkPath(parent + filename);
@@ -315,8 +336,9 @@ public class PosixFile {
 
   /**
    * Changes both the owner and group for a file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    */
   public final PosixFile chown(int uid, int gid) throws IOException {
     checkWrite();
@@ -329,8 +351,9 @@ public class PosixFile {
 
   /**
    * Stats the file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    */
   public Stat getStat() throws IOException {
     checkRead();
@@ -342,17 +365,18 @@ public class PosixFile {
 
   /**
    * Compares this contents of this file to the contents of another file.
-   *
+   * <p>
    * This method will follow both path symbolic links and a final symbolic link.
+   * </p>
    */
-  public boolean contentEquals(PosixFile otherUF) throws IOException {
+  public boolean contentEquals(PosixFile otherFile) throws IOException {
     Stat stat = getStat();
     if (!stat.isRegularFile()) {
       throw new IOException("Not a regular file: " + path);
     }
-    Stat otherStat = otherUF.getStat();
+    Stat otherStat = otherFile.getStat();
     if (!otherStat.isRegularFile()) {
-      throw new IOException("Not a regular file: " + otherUF.path);
+      throw new IOException("Not a regular file: " + otherFile.path);
     }
     long size = stat.getSize();
     if (size != otherStat.getSize()) {
@@ -363,8 +387,8 @@ public class PosixFile {
       buffSize = 64;
     }
     try (
-      InputStream in1 = new BufferedInputStream(new FileInputStream(getFile()), buffSize);
-      InputStream in2 = new BufferedInputStream(new FileInputStream(otherUF.getFile()), buffSize)
+        InputStream in1 = new BufferedInputStream(new FileInputStream(getFile()), buffSize);
+        InputStream in2 = new BufferedInputStream(new FileInputStream(otherFile.getFile()), buffSize)
         ) {
       while (true) {
         int b1 = in1.read();
@@ -382,8 +406,9 @@ public class PosixFile {
 
   /**
    * Compares the contents of a file to a byte[].
-   *
+   * <p>
    * This method will follow both path symbolic links and a final symbolic link.
+   * </p>
    */
   public boolean contentEquals(byte[] otherFile) throws IOException {
     Stat stat = getStat();
@@ -395,19 +420,21 @@ public class PosixFile {
 
   /**
    * Compares this contents of this file to the contents of another file.
-   *
+   * <p>
    * This method will not follow any symbolic links and is not subject to race conditions.
-   *
+   * </p>
+   * <p>
    * TODO: Java 1.8: Can do this in a pure Java way
+   * </p>
    */
-  public boolean secureContentEquals(PosixFile otherUF, int uid_min, int gid_min) throws IOException {
+  public boolean secureContentEquals(PosixFile otherFile, int uidMin, int gidMin) throws IOException {
     Stat stat = getStat();
     if (!stat.isRegularFile()) {
       throw new IOException("Not a regular file: " + path);
     }
-    Stat otherStat = otherUF.getStat();
+    Stat otherStat = otherFile.getStat();
     if (!otherStat.isRegularFile()) {
-      throw new IOException("Not a regular file: " + otherUF.path);
+      throw new IOException("Not a regular file: " + otherFile.path);
     }
     long size = stat.getSize();
     if (size != otherStat.getSize()) {
@@ -418,8 +445,8 @@ public class PosixFile {
       buffSize = 64;
     }
     try (
-      InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize);
-      InputStream in2 = new BufferedInputStream(otherUF.getSecureInputStream(uid_min, gid_min), buffSize)
+        InputStream in1 = new BufferedInputStream(getSecureInputStream(uidMin, gidMin), buffSize);
+        InputStream in2 = new BufferedInputStream(otherFile.getSecureInputStream(uidMin, gidMin), buffSize)
         ) {
       while (true) {
         int b1 = in1.read();
@@ -437,12 +464,14 @@ public class PosixFile {
 
   /**
    * Compares the contents of a file to a byte[].
-   *
+   * <p>
    * This method will not follow any symbolic links and is not subject to race conditions.
-   *
+   * </p>
+   * <p>
    * TODO: Java 1.8: Can do this in a pure Java way
+   * </p>
    */
-  public boolean secureContentEquals(byte[] otherFile, int uid_min, int gid_min) throws IOException {
+  public boolean secureContentEquals(byte[] otherFile, int uidMin, int gidMin) throws IOException {
     Stat stat = getStat();
     if (!stat.isRegularFile()) {
       throw new IOException("Not a regular file: " + path);
@@ -455,7 +484,7 @@ public class PosixFile {
     if (buffSize < 64) {
       buffSize = 64;
     }
-    try (InputStream in1 = new BufferedInputStream(getSecureInputStream(uid_min, gid_min), buffSize)) {
+    try (InputStream in1 = new BufferedInputStream(getSecureInputStream(uidMin, gidMin), buffSize)) {
       for (int c = 0; c < otherFile.length; c++) {
         int b1 = in1.read();
         int b2 = otherFile[c] & 0xff;
@@ -475,47 +504,48 @@ public class PosixFile {
   /**
    * Copies one filesystem object to another.  It supports block devices, directories, fifos, regular files, and symbolic links.  Directories are not
    * copied recursively.
-   *
+   * <p>
    * This method will follow both path symbolic links and a final symbolic link.
+   * </p>
    */
-  public void copyTo(PosixFile otherUF, boolean overwrite) throws IOException {
+  public void copyTo(PosixFile otherFile, boolean overwrite) throws IOException {
     checkRead();
-    otherUF.checkWrite();
+    otherFile.checkWrite();
     Stat stat = getStat();
     long mode = stat.getRawMode();
-    Stat otherStat = otherUF.getStat();
-    boolean oExists = otherStat.exists();
-    if (!overwrite && oExists) {
-      throw new IOException("File already exists: " + otherUF);
+    Stat otherStat = otherFile.getStat();
+    boolean otherExists = otherStat.exists();
+    if (!overwrite && otherExists) {
+      throw new IOException("File already exists: " + otherFile);
     }
     if (isBlockDevice(mode) || isCharacterDevice(mode)) {
-      if (oExists) {
-        otherUF.delete();
+      if (otherExists) {
+        otherFile.delete();
       }
-      otherUF.mknod(mode, stat.getDeviceIdentifier()).chown(stat.getUid(), stat.getGid());
+      otherFile.mknod(mode, stat.getDeviceIdentifier()).chown(stat.getUid(), stat.getGid());
     } else if (isDirectory(mode)) {
-      if (!oExists) {
-        otherUF.mkdir();
+      if (!otherExists) {
+        otherFile.mkdir();
       }
-      otherUF.setMode(mode).chown(stat.getUid(), stat.getGid());
+      otherFile.setMode(mode).chown(stat.getUid(), stat.getGid());
     } else if (isFifo(mode)) {
-      if (oExists) {
-        otherUF.delete();
+      if (otherExists) {
+        otherFile.delete();
       }
-      otherUF.mkfifo(mode).chown(stat.getUid(), stat.getGid());
+      otherFile.mkfifo(mode).chown(stat.getUid(), stat.getGid());
     } else if (isRegularFile(mode)) {
       try (
-        InputStream in = new FileInputStream(getFile());
-        OutputStream out = new FileOutputStream(otherUF.getFile())
+          InputStream in = new FileInputStream(getFile());
+          OutputStream out = new FileOutputStream(otherFile.getFile())
           ) {
-        otherUF.setMode(mode).chown(stat.getUid(), stat.getGid());
+        otherFile.setMode(mode).chown(stat.getUid(), stat.getGid());
         IoUtils.copy(in, out);
       }
     } else if (isSocket(mode)) {
       throw new IOException("Unable to copy socket: " + path);
     } else if (isSymLink(mode)) {
       // This takes the byte[] from readLink directory to symLink to avoid conversions from byte[]->String->byte[]
-      otherUF.symLink(readLink()).chown(stat.getUid(), stat.getGid());
+      otherFile.symLink(readLink()).chown(stat.getUid(), stat.getGid());
     } else {
       throw new RuntimeException("Unknown mode type: " + Long.toOctalString(mode));
     }
@@ -527,12 +557,16 @@ public class PosixFile {
   public enum CryptAlgorithm {
 
     /**
+     * DES algorithm.
+     *
      * @deprecated This is the old-school weakest form, do not use unless somehow absolutely required.
      */
     @Deprecated // Java 9: (forRemoval = false)
       DES("", 2),
 
     /**
+     * MD5 algorithm.
+     *
      * @deprecated As of glibc 2.7, prefer the stronger {@link #SHA256} and {@link #SHA512} alternatives.
      */
     @Deprecated // Java 9: (forRemoval = false)
@@ -636,7 +670,7 @@ public class PosixFile {
   }
 
   /**
-   * crypt is not thread safe due to static data in the return value
+   * crypt is not thread safe due to static data in the return value.
    */
   private static final Object cryptLock = new Object();
 
@@ -661,8 +695,9 @@ public class PosixFile {
 
   /**
    * Deletes this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @see  java.io.File#delete
    */
@@ -672,9 +707,10 @@ public class PosixFile {
 
   /**
    * Deletes this file and if it is a directory, all files below it.
-   *
+   * <p>
    * Due to a race conditition, this method will follow symbolic links.  Please use
    * <code>secureDeleteRecursive</code> instead.
+   * </p>
    *
    * @see  #deleteRecursive(com.aoapps.io.posix.PosixFile)
    */
@@ -683,7 +719,7 @@ public class PosixFile {
   }
 
   /**
-   * @see  #deleteRecursive()
+   * See {@link #deleteRecursive()}.
    */
   private static void deleteRecursive(PosixFile file) throws IOException {
     try {
@@ -732,18 +768,18 @@ public class PosixFile {
    */
   public final void secureParents(
       List<SecuredDirectory> parentsChanged,
-      int uid_min,
-      int gid_min
+      int uidMin,
+      int gidMin
   ) throws IOException {
     // Build a stack of all parents
     Stack<PosixFile> parents = new Stack<>();
-    {
-      PosixFile parent = getParent();
-      while (!parent.isRootDirectory()) {
-        parents.push(parent);
-        parent = parent.getParent();
+      {
+        PosixFile parent = getParent();
+        while (!parent.isRootDirectory()) {
+          parents.push(parent);
+          parent = parent.getParent();
+        }
       }
-    }
     // Set any necessary permissions from root to file's immediate parent while looking for symbolic links
     while (!parents.isEmpty()) {
       PosixFile parent = parents.pop();
@@ -755,18 +791,17 @@ public class PosixFile {
       int uid = parentStat.getUid();
       int gid = parentStat.getGid();
       if (
-          uid >= uid_min
-              || gid >= gid_min
+          uid >= uidMin
+              || gid >= gidMin
               || (statMode & (OTHER_WRITE | SET_GID | SET_UID)) != 0
       ) {
         parentsChanged.add(new SecuredDirectory(parent, statMode, uid, gid));
         parent
             .setMode(statMode & (NOT_OTHER_WRITE & NOT_SET_GID & NOT_SET_UID))
             .chown(
-                uid >= uid_min ? ROOT_UID : uid,
-                gid >= gid_min ? ROOT_GID : gid
-            )
-        ;
+                uid >= uidMin ? ROOT_UID : uid,
+                gid >= gidMin ? ROOT_GID : gid
+            );
       }
     }
   }
@@ -783,22 +818,24 @@ public class PosixFile {
 
   /**
    * Securely deletes this file entry and all files below it while not following symbolic links.  This method must be called with
-   * root privileges to properly avoid race conditions.  If not running with root privileges, use <code>deleteRecursive</code> instead.<br>
-   * <br>
+   * root privileges to properly avoid race conditions.  If not running with root privileges, use <code>deleteRecursive</code> instead.
+   * <p>
    * In order to avoid race conditions, all directories above this directory will have their permissions set
    * so that regular users cannot modify the directories.  After each parent directory has its permissions set
    * it will then check for symbolic links.  Once all of the parent directories have been completed, the filesystem
    * will recursively have its permissions reset, scans for symlinks, and deletes performed in such a way all
    * race conditions are avoided.  Finally, the parent directory permissions that were modified will be restored.
-   *
+   * </p>
+   * <p>
    * TODO: Java 1.8: Can do this in a pure Java way
+   * </p>
    *
    * @see  #secureDeleteRecursive(com.aoapps.io.posix.PosixFile)
    */
-  public final void secureDeleteRecursive(int uid_min, int gid_min) throws IOException {
+  public final void secureDeleteRecursive(int uidMin, int gidMin) throws IOException {
     List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
-      secureParents(parentsChanged, uid_min, gid_min);
+      secureParents(parentsChanged, uidMin, gidMin);
       secureDeleteRecursive(this);
     } finally {
       restoreParents(parentsChanged);
@@ -806,7 +843,7 @@ public class PosixFile {
   }
 
   /**
-   * @see  #secureDeleteRecursive(int, int)
+   * See {@link #secureDeleteRecursive(int, int)}.
    */
   private static void secureDeleteRecursive(PosixFile file) throws IOException {
     try {
@@ -841,8 +878,9 @@ public class PosixFile {
   /**
    * Determines if a file exists, a symbolic link with an invalid destination
    * is still considered to exist.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).exists()
    */
@@ -853,8 +891,9 @@ public class PosixFile {
 
   /**
    * Gets the last access to this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getAccessTime()
    */
@@ -869,8 +908,9 @@ public class PosixFile {
 
   /**
    * Gets the block count for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(State).getBlockCount()
    */
@@ -885,8 +925,9 @@ public class PosixFile {
 
   /**
    * Gets the block size for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getBlockSize()
    */
@@ -901,8 +942,9 @@ public class PosixFile {
 
   /**
    * Gets the change time of this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getChangeTime()
    */
@@ -917,8 +959,9 @@ public class PosixFile {
 
   /**
    * Gets the device for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getDevice()
    */
@@ -933,8 +976,9 @@ public class PosixFile {
 
   /**
    * Gets the device identifier for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getDeviceIdentifier()
    */
@@ -985,8 +1029,9 @@ public class PosixFile {
 
   /**
    * Gets the group ID for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getGid()
    */
@@ -1001,8 +1046,9 @@ public class PosixFile {
 
   /**
    * Gets the inode for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getInode()
    */
@@ -1017,8 +1063,9 @@ public class PosixFile {
 
   /**
    * Gets the link count for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getNumberLinks()
    */
@@ -1033,8 +1080,9 @@ public class PosixFile {
 
   /**
    * Gets the permission bits of the mode of this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getMode()
    */
@@ -1080,14 +1128,14 @@ public class PosixFile {
         .append((mode & OTHER_READ) != 0 ? 'r' : '-')
         .append((mode & OTHER_WRITE) != 0 ? 'w' : '-')
         .append((mode & OTHER_EXECUTE) != 0 ? ((mode & SAVE_TEXT_IMAGE) != 0 ? 't' : 'x') : ((mode & SAVE_TEXT_IMAGE) != 0 ? 'T' : '-'))
-        .toString()
-    ;
+        .toString();
   }
 
   /**
    * Gets a String representation of the mode of this file similar to the output of the POSIX <code>ls</code> command.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getModeString()
    */
@@ -1103,13 +1151,14 @@ public class PosixFile {
   /**
    * Securely gets a <code>FileInputStream</code> to this file, temporarily performing permission
    * changes and ensuring that no symbolic links are anywhere in the path.
-   *
+   * <p>
    * TODO: Java 1.8: Can do this in a pure Java way
+   * </p>
    */
-  public final FileInputStream getSecureInputStream(int uid_min, int gid_min) throws IOException {
+  public final FileInputStream getSecureInputStream(int uidMin, int gidMin) throws IOException {
     List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
-      secureParents(parentsChanged, uid_min, gid_min);
+      secureParents(parentsChanged, uidMin, gidMin);
 
       // Make sure the file does not exist
       if (!getStat().isRegularFile()) {
@@ -1126,16 +1175,18 @@ public class PosixFile {
   /**
    * Securely gets a <code>FileOutputStream</code> to this file, temporarily performing permission
    * changes and ensuring that no symbolic links are anywhere in the path.
-   *
+   * <p>
    * TODO: Consider the impact of using mktemp instead of secureParents/restoreParents because there
    *       is the possibility that permissions may not be restored if the JVM is shutdown at that moment.
-   *
+   * </p>
+   * <p>
    * TODO: Java 1.8: Can do this in a pure Java way
+   * </p>
    */
-  public final FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uid_min, int gid_min) throws IOException {
+  public final FileOutputStream getSecureOutputStream(int uid, int gid, long mode, boolean overwrite, int uidMin, int gidMin) throws IOException {
     List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
-      secureParents(parentsChanged, uid_min, gid_min);
+      secureParents(parentsChanged, uidMin, gidMin);
 
       // Make sure the file does not exist
       Stat stat = getStat();
@@ -1161,13 +1212,14 @@ public class PosixFile {
   /**
    * Securely gets a <code>RandomAccessFile</code> to this file, temporarily performing permission
    * changes and ensuring that no symbolic links are anywhere in the path.
-   *
+   * <p>
    * TODO: Java 1.8: Can do this in a pure Java way
+   * </p>
    */
-  public final RandomAccessFile getSecureRandomAccessFile(String mode, int uid_min, int gid_min) throws IOException {
+  public final RandomAccessFile getSecureRandomAccessFile(String mode, int uidMin, int gidMin) throws IOException {
     List<SecuredDirectory> parentsChanged = new ArrayList<>();
     try {
-      secureParents(parentsChanged, uid_min, gid_min);
+      secureParents(parentsChanged, uidMin, gidMin);
 
       // Make sure the file does not exist
       if (!getStat().isRegularFile()) {
@@ -1186,20 +1238,21 @@ public class PosixFile {
    * Not synchronized because multiple instantiation is acceptable.
    */
   public final PosixFile getParent() {
-    if (_parent == null) {
+    if (parentPosixFile == null) {
       File parentFile = getFile().getParentFile();
       if (parentFile != null) {
-        _parent = new PosixFile(parentFile);
+        parentPosixFile = new PosixFile(parentFile);
       }
     }
-    return _parent;
+    return parentPosixFile;
   }
 
   /**
    * Gets the complete mode of the file, including the bits representing the
    * file type.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getRawMode()
    */
@@ -1214,8 +1267,9 @@ public class PosixFile {
 
   /**
    * Gets the modification time of the file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getModifyTime()
    */
@@ -1230,8 +1284,9 @@ public class PosixFile {
 
   /**
    * Gets the size of the file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getSize()
    */
@@ -1247,8 +1302,9 @@ public class PosixFile {
   /**
    * Securely creates a temporary file, not deleting on exit.  In order to be secure, though, the directory
    * needs to be secure, or at least have the sticky bit set.
-   *
-   * This method will follow symbolic links in the path but not final links.
+   * <p>
+   * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @see  #mktemp(String, boolean)
    *
@@ -1272,8 +1328,9 @@ public class PosixFile {
   /**
    * Securely creates a temporary file.  In order to be secure, though, the directory
    * needs to be secure, or at least have the sticky bit set.
-   *
-   * This method will follow symbolic links in the path but not final links.
+   * <p>
+   * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}
    *              or <a href="https://oss.aoapps.com/tempfiles/apidocs/com.aoapps.tempfiles/com/aoapps/tempfiles/TempFileContext.html">TempFileContext</a>
@@ -1292,8 +1349,9 @@ public class PosixFile {
 
   /**
    * Gets the user ID of the file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).getUid()
    */
@@ -1315,8 +1373,9 @@ public class PosixFile {
 
   /**
    * Determines if this file represents a block device.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).isBlockDevice()
    */
@@ -1338,8 +1397,9 @@ public class PosixFile {
 
   /**
    * Determines if this file represents a character device.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).isCharacterDevice()
    */
@@ -1361,8 +1421,9 @@ public class PosixFile {
 
   /**
    * Determines if this file represents a directory.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).isDirectory()
    */
@@ -1384,8 +1445,9 @@ public class PosixFile {
 
   /**
    * Determines if this file represents a FIFO.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).isFifo()
    */
@@ -1404,14 +1466,14 @@ public class PosixFile {
   public static boolean isRegularFile(long mode) {
     return
         (mode & TYPE_MASK) == IS_REGULAR_FILE
-            || (mode & TYPE_MASK) == 0
-    ;
+            || (mode & TYPE_MASK) == 0;
   }
 
   /**
    * Determines if this file represents a regular file.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).isRegularFile()
    */
@@ -1440,8 +1502,9 @@ public class PosixFile {
 
   /**
    * Determines if this file represents a socket.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).isSocket()
    */
@@ -1463,8 +1526,9 @@ public class PosixFile {
 
   /**
    * Determines if this file represents a sybolic link.
-   *
+   * <p>
    * This method will follow symbolic links in the path but not a final symbolic link.
+   * </p>
    *
    * @deprecated  Please use getStat(Stat).isSymLink()
    */
@@ -1479,8 +1543,9 @@ public class PosixFile {
 
   /**
    * Lists the contents of the directory.
-   *
+   * <p>
    * This method will follow symbolic links in the path, including a final symbolic link.
+   * </p>
    *
    * @see java.io.File#list
    */
@@ -1490,8 +1555,9 @@ public class PosixFile {
 
   /**
    * Creates a directory.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile mkdir() throws IOException {
     if (!getFile().mkdir()) {
@@ -1503,8 +1569,9 @@ public class PosixFile {
   /**
    * Creates a directory and sets its permissions, optionally creating all the parent directories if they
    * do not exist.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile mkdir(boolean makeParents, long mode) throws IOException {
     if (makeParents) {
@@ -1525,8 +1592,9 @@ public class PosixFile {
   /**
    * Creates a directory and sets its permissions, optionally creating all the parent directories if they
    * do not exist.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile mkdir(boolean makeParents, long mode, int uid, int gid) throws IOException {
     if (makeParents) {
@@ -1546,8 +1614,9 @@ public class PosixFile {
 
   /**
    * Creates a device file.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile mknod(long mode, long device) throws IOException {
     checkWrite();
@@ -1560,8 +1629,9 @@ public class PosixFile {
 
   /**
    * Creates a FIFO.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile mkfifo(long mode) throws IOException {
     checkWrite();
@@ -1574,8 +1644,9 @@ public class PosixFile {
 
   /**
    * Sets the access time for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
    */
@@ -1590,13 +1661,14 @@ public class PosixFile {
 
   /**
    * Sets the group ID for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
    */
   @Deprecated // Java 9: (forRemoval = false)
-  public final PosixFile setGID(int gid) throws IOException {
+  public final PosixFile setGid(int gid) throws IOException {
     checkWrite();
     // getStat does loadLibrary already: loadLibrary();
     int uid = getStat().getUid();
@@ -1605,9 +1677,24 @@ public class PosixFile {
   }
 
   /**
-   * Sets the permissions for this file.
-   *
+   * Sets the group ID for this file.
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
+   *
+   * @deprecated  Please use {@link #setGid(int)} instead.
+   */
+  // TODO: Remove in 5.0.0 release
+  @Deprecated // Java 9: (forRemoval = true)
+  public final PosixFile setGID(int gid) throws IOException {
+    return setGid(gid);
+  }
+
+  /**
+   * Sets the permissions for this file.
+   * <p>
+   * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile setMode(long mode) throws IOException {
     checkWrite();
@@ -1620,8 +1707,9 @@ public class PosixFile {
 
   /**
    * Sets the modification time for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
    */
@@ -1636,13 +1724,14 @@ public class PosixFile {
 
   /**
    * Sets the user ID for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
    */
   @Deprecated // Java 9: (forRemoval = false)
-  public final PosixFile setUID(int uid) throws IOException {
+  public final PosixFile setUid(int uid) throws IOException {
     checkWrite();
     // getStat does loadLibrary already: loadLibrary();
     int gid = getStat().getGid();
@@ -1651,9 +1740,24 @@ public class PosixFile {
   }
 
   /**
-   * Creates a symbolic link.
-   *
+   * Sets the user ID for this file.
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
+   *
+   * @deprecated  Please use {@link #setUid(int)} instead.
+   */
+  // TODO: Remove in 5.0.0 release
+  @Deprecated // Java 9: (forRemoval = true)
+  public final PosixFile setUID(int uid) throws IOException {
+    return setUid(uid);
+  }
+
+  /**
+   * Creates a symbolic link.
+   * <p>
+   * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile symLink(String destination) throws IOException {
     checkWrite();
@@ -1666,8 +1770,9 @@ public class PosixFile {
 
   /**
    * Creates a hard link.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile link(PosixFile destination) throws IOException {
     return link(destination.getPath());
@@ -1675,8 +1780,9 @@ public class PosixFile {
 
   /**
    * Creates a hard link.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile link(String destination) throws IOException {
     checkWrite();
@@ -1689,8 +1795,9 @@ public class PosixFile {
 
   /**
    * Reads a symbolic link.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final String readLink() throws IOException {
     checkRead();
@@ -1702,8 +1809,9 @@ public class PosixFile {
 
   /**
    * Renames this file, possibly overwriting any previous file.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    *
    * @see File#renameTo(File)
    */
@@ -1718,8 +1826,9 @@ public class PosixFile {
 
   /**
    * Sets the access and modify times for this file.
-   *
+   * <p>
    * This method will follow symbolic links in the path.
+   * </p>
    */
   public final PosixFile utime(long atime, long mtime) throws IOException {
     checkWrite();
@@ -1739,7 +1848,6 @@ public class PosixFile {
   public boolean equals(Object obj) {
     return
         (obj instanceof PosixFile)
-            && ((PosixFile) obj).path.equals(path)
-    ;
+            && ((PosixFile) obj).path.equals(path);
   }
 }

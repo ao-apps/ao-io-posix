@@ -250,14 +250,23 @@ public class DevRandom extends Random {
     nextBytesStatic(bytes, 0, bytes.length);
   }
 
+  /**
+   * See {@link #nextBytes(byte[])}.
+   */
   public void nextBytes(byte[] bytes, int off, int len) {
     nextBytesStatic(bytes, off, len);
   }
 
+  /**
+   * Static implementation of {@link #nextBytes(byte[])}.
+   */
   public static void nextBytesStatic(byte[] bytes) {
     nextBytesStatic(bytes, 0, bytes.length);
   }
 
+  /**
+   * Static implementation of {@link #nextBytes(byte[], int, int)}.
+   */
   public static void nextBytesStatic(byte[] bytes, int off, int len) {
     try {
       if (len > 0) {
@@ -307,8 +316,7 @@ public class DevRandom extends Random {
           (b1 << 24)
               | (b2 << 16)
               | (b3 << 8)
-              | b4
-      ;
+              | b4;
     } catch (IOException err) {
       try {
         closeDevRandomIn();
@@ -365,8 +373,7 @@ public class DevRandom extends Random {
               | (b5 << 24)
               | (b6 << 16)
               | (b7 << 8)
-              | b8
-      ;
+              | b8;
     } catch (IOException err) {
       try {
         closeDevRandomIn();
