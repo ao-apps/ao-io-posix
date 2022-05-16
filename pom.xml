@@ -29,7 +29,7 @@ along with ao-io-posix.  If not, see <https://www.gnu.org/licenses/>.
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
-  <groupId>com.aoapps</groupId><artifactId>ao-io-posix</artifactId><version>4.1.0</version>
+  <groupId>com.aoapps</groupId><artifactId>ao-io-posix</artifactId><version>4.1.0-POST-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <properties>
@@ -85,7 +85,7 @@ along with ao-io-posix.  If not, see <https://www.gnu.org/licenses/>.
     <connection>scm:git:git://github.com/ao-apps/ao-io-posix.git</connection>
     <developerConnection>scm:git:git@github.com:ao-apps/ao-io-posix.git</developerConnection>
     <url>https://github.com/ao-apps/ao-io-posix</url>
-    <tag>ao-io-posix-4.1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
