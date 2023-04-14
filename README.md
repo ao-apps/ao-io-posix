@@ -22,7 +22,7 @@ Java interface to native POSIX filesystem objects.
 * [Project Home](https://oss.aoapps.com/io-posix/)
 * [Changelog](https://oss.aoapps.com/io-posix/changelog)
 * [API Docs](https://oss.aoapps.com/io-posix/apidocs/)
-* [Maven Central Repository](https://central.sonatype.com/search?namespace=com.aoapps&q=a%3Aao-io-posix)
+* [Maven Central Repository](https://central.sonatype.com/artifact/com.aoapps/ao-io-posix)
 * [GitHub](https://github.com/ao-apps/ao-io-posix)
 
 ## Contact Us
