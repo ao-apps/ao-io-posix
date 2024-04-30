@@ -1,6 +1,6 @@
 /*
  * ao-io-posix - Java interface to native POSIX filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -626,6 +626,41 @@ public class PosixFile {
     }
   }
 
+  // TODO: Take Password instances from ao-security instead?
+  private static native String crypt0(String password, String salt);
+
+  /**
+   * crypt is not thread safe due to static data in the return value.
+   */
+  private static final Object cryptLock = new Object();
+
+  /**
+   * Hashes a password using the provided salt.  The salt includes any
+   * {@link CryptAlgorithm#getSaltPrefix() salt prefix} for the algorithm.
+   * <p>
+   * Please refer to <code>man 3 crypt</code> for more details.
+   * </p>
+   */
+  // TODO: Take Password instances from ao-security instead?
+  public static String crypt(String password, String salt) {
+    loadLibrary();
+    // crypt is not thread safe due to static data in the return value
+    synchronized (cryptLock) {
+      return crypt0(password, salt);
+    }
+  }
+
+  /**
+   * Hashes a password using the provided crypt algorithm and the provided random source.
+   */
+  // TODO: Take Password instances from ao-security instead?
+  public static String crypt(String password, CryptAlgorithm algorithm, SecureRandom secureRandom) {
+    return crypt(
+        password,
+        algorithm.generateSalt(secureRandom)
+    );
+  }
+
   /**
    * Hashes a password using the MD5 crypt algorithm and a default {@link SecureRandom} instance, which is not a
    * {@linkplain SecureRandom#getInstanceStrong() strong instance} to avoid blocking.
@@ -657,41 +692,6 @@ public class PosixFile {
   public static String crypt(String password, CryptAlgorithm algorithm) {
     return crypt(password, algorithm, secureRandom);
   }
-
-  /**
-   * Hashes a password using the provided crypt algorithm and the provided random source.
-   */
-  // TODO: Take Password instances from ao-security instead?
-  public static String crypt(String password, CryptAlgorithm algorithm, SecureRandom secureRandom) {
-    return crypt(
-        password,
-        algorithm.generateSalt(secureRandom)
-    );
-  }
-
-  /**
-   * crypt is not thread safe due to static data in the return value.
-   */
-  private static final Object cryptLock = new Object();
-
-  /**
-   * Hashes a password using the provided salt.  The salt includes any
-   * {@link CryptAlgorithm#getSaltPrefix() salt prefix} for the algorithm.
-   * <p>
-   * Please refer to <code>man 3 crypt</code> for more details.
-   * </p>
-   */
-  // TODO: Take Password instances from ao-security instead?
-  public static String crypt(String password, String salt) {
-    loadLibrary();
-    // crypt is not thread safe due to static data in the return value
-    synchronized (cryptLock) {
-      return crypt0(password, salt);
-    }
-  }
-
-  // TODO: Take Password instances from ao-security instead?
-  private static native String crypt0(String password, String salt);
 
   /**
    * Deletes this file.
