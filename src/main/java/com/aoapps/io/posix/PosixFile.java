@@ -747,7 +747,7 @@ public class PosixFile {
   }
 
   /**
-   * TODO: Java 1.8: Can do this in a pure Java way
+   * TODO: Java 1.8: Can do this in a pure Java way.
    */
   public static class SecuredDirectory {
     private final PosixFile directory;
@@ -764,7 +764,7 @@ public class PosixFile {
   }
 
   /**
-   * TODO: Java 1.8: Can do this in a pure Java way
+   * TODO: Java 1.8: Can do this in a pure Java way.
    */
   public final void secureParents(
       List<SecuredDirectory> parentsChanged,
@@ -807,7 +807,7 @@ public class PosixFile {
   }
 
   /**
-   * TODO: Java 1.8: Can do this in a pure Java way
+   * TODO: Java 1.8: Can do this in a pure Java way.
    */
   public final void restoreParents(List<SecuredDirectory> parentsChanged) throws IOException {
     for (int c = parentsChanged.size() - 1; c >= 0; c--) {
