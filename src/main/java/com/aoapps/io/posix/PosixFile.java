@@ -1,6 +1,6 @@
 /*
  * ao-io-posix - Java interface to native POSIX filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -224,7 +224,7 @@ public class PosixFile {
    *
    * @deprecated  Please call #PosixFile(PosixFile,String,boolean) to explicitly control whether strict parent checking is performed
    */
-  @Deprecated // Java 9: (forRemoval = false)
+  @Deprecated(forRemoval = false)
   public PosixFile(PosixFile parent, String path) throws IOException {
     this(parent, path, true);
   }
@@ -549,7 +549,7 @@ public class PosixFile {
      *
      * @deprecated This is the old-school weakest form, do not use unless somehow absolutely required.
      */
-    @Deprecated // Java 9: (forRemoval = false)
+    @Deprecated(forRemoval = false)
       DES("", 2),
 
     /**
@@ -557,7 +557,7 @@ public class PosixFile {
      *
      * @deprecated As of glibc 2.7, prefer the stronger {@link #SHA256} and {@link #SHA512} alternatives.
      */
-    @Deprecated // Java 9: (forRemoval = false)
+    @Deprecated(forRemoval = false)
         MD5("$1$", 8),
 
     /**
@@ -654,7 +654,7 @@ public class PosixFile {
    *
    * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm)} instead.
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   // TODO: Take Password instances from ao-security instead?
   public static String crypt(String password) {
     return crypt(password, CryptAlgorithm.MD5, secureRandom);
@@ -665,7 +665,7 @@ public class PosixFile {
    *
    * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm, java.security.SecureRandom)} instead.
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   // TODO: Take Password instances from ao-security instead?
   public static String crypt(String password, SecureRandom secureRandom) {
     return crypt(password, CryptAlgorithm.MD5, secureRandom);
@@ -866,7 +866,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).exists()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean exists() throws IOException {
     return getStat().exists();
   }
@@ -878,7 +878,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getAccessTime()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getAccessTime() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -894,7 +894,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(State).getBlockCount()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getBlockCount() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -910,7 +910,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getBlockSize()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final int getBlockSize() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -926,7 +926,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getChangeTime()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getChangeTime() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -942,7 +942,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getDevice()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getDevice() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -958,7 +958,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getDeviceIdentifier()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getDeviceIdentifier() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -991,7 +991,7 @@ public class PosixFile {
    * @deprecated  the use of the word <code>filename</code> is misleading since it represents the entire path, please use <code>getPath()</code> instead.
    * @see  #getPath()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final String getFilename() {
     return path;
   }
@@ -1010,7 +1010,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getGid()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final int getGid() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1026,7 +1026,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getInode()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getInode() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1042,7 +1042,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getNumberLinks()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final int getLinkCount() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1058,7 +1058,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getMode()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getMode() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1110,7 +1110,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getModeString()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final String getModeString() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1222,7 +1222,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getRawMode()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getStatMode() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1238,7 +1238,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getModifyTime()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getModifyTime() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1254,7 +1254,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getSize()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final long getSize() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1273,7 +1273,7 @@ public class PosixFile {
    *
    * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}.
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public static PosixFile mktemp(String template) throws IOException {
     try {
       String path = template + "XXXXXXXXXX";
@@ -1298,7 +1298,7 @@ public class PosixFile {
    *              or <a href="https://oss.aoapps.com/tempfiles/apidocs/com.aoapps.tempfiles/com/aoapps/tempfiles/TempFileContext.html">TempFileContext</a>
    *              as {@link File#deleteOnExit()} is prone to memory leaks in long-running applications.
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public static PosixFile mktemp(String template, boolean deleteOnExit) throws IOException {
     PosixFile uf = mktemp(template);
     if (deleteOnExit) {
@@ -1316,7 +1316,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).getUid()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final int getUid() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1339,7 +1339,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).isBlockDevice()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean isBlockDevice() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1362,7 +1362,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).isCharacterDevice()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean isCharacterDevice() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1385,7 +1385,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).isDirectory()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean isDirectory() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1408,7 +1408,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).isFifo()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean isFifo() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1433,7 +1433,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).isRegularFile()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean isRegularFile() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1463,7 +1463,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).isSocket()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean isSocket() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1486,7 +1486,7 @@ public class PosixFile {
    *
    * @deprecated  Please use getStat(Stat).isSymLink()
    */
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final boolean isSymLink() throws IOException {
     Stat stat = getStat();
     if (!stat.exists()) {
@@ -1597,7 +1597,7 @@ public class PosixFile {
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
    */
-  @Deprecated // Java 9: (forRemoval = false)
+  @Deprecated(forRemoval = false)
   public final PosixFile setAccessTime(long atime) throws IOException {
     checkWrite();
     // getStat does loadLibrary already: loadLibrary();
@@ -1613,7 +1613,7 @@ public class PosixFile {
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
    */
-  @Deprecated // Java 9: (forRemoval = false)
+  @Deprecated(forRemoval = false)
   public final PosixFile setGid(int gid) throws IOException {
     checkWrite();
     // getStat does loadLibrary already: loadLibrary();
@@ -1630,7 +1630,7 @@ public class PosixFile {
    * @deprecated  Please use {@link #setGid(int)} instead.
    */
   // TODO: Remove in 5.0.0 release
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final PosixFile setGID(int gid) throws IOException {
     return setGid(gid);
   }
@@ -1656,7 +1656,7 @@ public class PosixFile {
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use utime(long,long) directly to avoid this extra stat.
    */
-  @Deprecated // Java 9: (forRemoval = false)
+  @Deprecated(forRemoval = false)
   public final PosixFile setModifyTime(long mtime) throws IOException {
     checkWrite();
     // getStat does loadLibrary already: loadLibrary();
@@ -1672,7 +1672,7 @@ public class PosixFile {
    *
    * @deprecated  This method internally performs an extra stat.  Please try to use chown(int,int) directly to avoid this extra stat.
    */
-  @Deprecated // Java 9: (forRemoval = false)
+  @Deprecated(forRemoval = false)
   public final PosixFile setUid(int uid) throws IOException {
     checkWrite();
     // getStat does loadLibrary already: loadLibrary();
@@ -1689,7 +1689,7 @@ public class PosixFile {
    * @deprecated  Please use {@link #setUid(int)} instead.
    */
   // TODO: Remove in 5.0.0 release
-  @Deprecated // Java 9: (forRemoval = true)
+  @Deprecated(forRemoval = true)
   public final PosixFile setUID(int uid) throws IOException {
     return setUid(uid);
   }

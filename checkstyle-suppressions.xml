@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 ao-io-posix - Java interface to native POSIX filesystem objects.
-Copyright (C) 2022, 2024  AO Industries, Inc.
+Copyright (C) 2022, 2024, 2025  AO Industries, Inc.
     support@aoindustries.com
     7262 Bull Pen Cir
     Mobile, AL 36695
@@ -37,12 +37,12 @@ along with ao-io-posix.  If not, see <https://www.gnu.org/licenses/>.
   <!-- TODO: Implement tests -->
   <suppress
     checks="AbbreviationAsWordInName"
-    files="[/\\]com[/\\]aoapps[/\\]hodgepodge[/\\]io[/\\]FilesystemIteratorTestTODO\.java$"
+    files="[/\\]com[/\\]aoapps[/\\]hodgepodge[/\\]io[/\\]tests[/\\]FilesystemIteratorTestTODO\.java$"
     message="'FilesystemIteratorTestTODO'"
   />
   <suppress
     checks="MissingJavadocMethod"
-    files="[/\\]com[/\\]aoapps[/\\]hodgepodge[/\\]io[/\\]FilesystemIteratorTestTODO\.java$"
+    files="[/\\]com[/\\]aoapps[/\\]hodgepodge[/\\]io[/\\]tests[/\\]FilesystemIteratorTestTODO\.java$"
   />
 
 </suppressions>

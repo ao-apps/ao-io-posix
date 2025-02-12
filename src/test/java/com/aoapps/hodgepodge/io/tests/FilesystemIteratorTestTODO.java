@@ -21,8 +21,11 @@
  * along with ao-io-posix.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.aoapps.hodgepodge.io;
+package com.aoapps.hodgepodge.io.tests;
 
+import com.aoapps.hodgepodge.io.FileExistsRule;
+import com.aoapps.hodgepodge.io.FilesystemIterator;
+import com.aoapps.hodgepodge.io.FilesystemIteratorRule;
 import com.aoapps.io.posix.PosixFile;
 import java.io.File;
 import java.io.FileOutputStream;
