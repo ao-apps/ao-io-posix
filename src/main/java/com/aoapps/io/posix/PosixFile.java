@@ -758,13 +758,13 @@ public class PosixFile {
   ) throws IOException {
     // Build a stack of all parents
     Stack<PosixFile> parents = new Stack<>();
-      {
-        PosixFile parent = getParent();
-        while (!parent.isRootDirectory()) {
-          parents.push(parent);
-          parent = parent.getParent();
-        }
+    {
+      PosixFile parent = getParent();
+      while (!parent.isRootDirectory()) {
+        parents.push(parent);
+        parent = parent.getParent();
       }
+    }
     // Set any necessary permissions from root to file's immediate parent while looking for symbolic links
     while (!parents.isEmpty()) {
       PosixFile parent = parents.pop();
