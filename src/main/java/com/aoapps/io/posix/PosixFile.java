@@ -1,6 +1,6 @@
 /*
  * ao-io-posix - Java interface to native POSIX filesystem objects.
- * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
+ * Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -618,7 +618,7 @@ public class PosixFile {
   private static native String crypt0(String password, String salt);
 
   /**
-   * crypt is not thread safe due to static data in the return value.
+   * {@code crypt} is not thread safe due to static data in the return value.
    */
   private static final Object cryptLock = new Object();
 
