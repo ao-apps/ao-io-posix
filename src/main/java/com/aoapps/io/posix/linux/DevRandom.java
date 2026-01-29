@@ -251,21 +251,21 @@ public class DevRandom extends Random {
   }
 
   /**
-   * See {@link #nextBytes(byte[])}.
+   * See {@link DevRandom#nextBytes(byte[])}.
    */
   public void nextBytes(byte[] bytes, int off, int len) {
     nextBytesStatic(bytes, off, len);
   }
 
   /**
-   * Static implementation of {@link #nextBytes(byte[])}.
+   * Static implementation of {@link DevRandom#nextBytes(byte[])}.
    */
   public static void nextBytesStatic(byte[] bytes) {
     nextBytesStatic(bytes, 0, bytes.length);
   }
 
   /**
-   * Static implementation of {@link #nextBytes(byte[], int, int)}.
+   * Static implementation of {@link DevRandom#nextBytes(byte[], int, int)}.
    */
   public static void nextBytesStatic(byte[] bytes, int off, int len) {
     try {

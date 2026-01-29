@@ -555,7 +555,7 @@ public class PosixFile {
     /**
      * MD5 algorithm.
      *
-     * @deprecated As of glibc 2.7, prefer the stronger {@link #SHA256} and {@link #SHA512} alternatives.
+     * @deprecated As of glibc 2.7, prefer the stronger {@link CryptAlgorithm#SHA256} and {@link CryptAlgorithm#SHA512} alternatives.
      */
     @Deprecated(forRemoval = false)
         MD5("$1$", 8),
@@ -652,7 +652,7 @@ public class PosixFile {
    * Hashes a password using the MD5 crypt algorithm and a default {@link SecureRandom} instance, which is not a
    * {@linkplain SecureRandom#getInstanceStrong() strong instance} to avoid blocking.
    *
-   * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm)} instead.
+   * @deprecated  Please provide the algorithm and call {@link PosixFile#crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm)} instead.
    */
   @Deprecated(forRemoval = true)
   // TODO: Take Password instances from ao-security instead?
@@ -663,7 +663,7 @@ public class PosixFile {
   /**
    * Hashes a password using the MD5 crypt algorithm and the provided random source.
    *
-   * @deprecated  Please provide the algorithm and call {@link #crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm, java.security.SecureRandom)} instead.
+   * @deprecated  Please provide the algorithm and call {@link PosixFile#crypt(java.lang.String, com.aoapps.io.posix.PosixFile.CryptAlgorithm, java.security.SecureRandom)} instead.
    */
   @Deprecated(forRemoval = true)
   // TODO: Take Password instances from ao-security instead?
@@ -697,14 +697,14 @@ public class PosixFile {
    * <p>Due to a race conditition, this method will follow symbolic links.  Please use
    * <code>secureDeleteRecursive</code> instead.</p>
    *
-   * @see  #deleteRecursive(com.aoapps.io.posix.PosixFile)
+   * @see  PosixFile#deleteRecursive(com.aoapps.io.posix.PosixFile)
    */
   public final void deleteRecursive() throws IOException {
     deleteRecursive(this);
   }
 
   /**
-   * See {@link #deleteRecursive()}.
+   * See {@link PosixFile#deleteRecursive()}.
    */
   private static void deleteRecursive(PosixFile file) throws IOException {
     try {
@@ -813,7 +813,7 @@ public class PosixFile {
    *
    * <p>TODO: Java 1.8: Can do this in a pure Java way</p>
    *
-   * @see  #secureDeleteRecursive(com.aoapps.io.posix.PosixFile)
+   * @see  PosixFile#secureDeleteRecursive(com.aoapps.io.posix.PosixFile)
    */
   public final void secureDeleteRecursive(int uidMin, int gidMin) throws IOException {
     List<SecuredDirectory> parentsChanged = new ArrayList<>();
@@ -826,7 +826,7 @@ public class PosixFile {
   }
 
   /**
-   * See {@link #secureDeleteRecursive(int, int)}.
+   * See {@link PosixFile#secureDeleteRecursive(int, int)}.
    */
   private static void secureDeleteRecursive(PosixFile file) throws IOException {
     try {
@@ -989,7 +989,7 @@ public class PosixFile {
    * Gets the path for this <code>PosixFile</code>.
    *
    * @deprecated  the use of the word <code>filename</code> is misleading since it represents the entire path, please use <code>getPath()</code> instead.
-   * @see  #getPath()
+   * @see  PosixFile#getPath()
    */
   @Deprecated(forRemoval = true)
   public final String getFilename() {
@@ -1269,7 +1269,7 @@ public class PosixFile {
    *
    * <p>This method will follow symbolic links in the path but not a final symbolic link.</p>
    *
-   * @see  #mktemp(String, boolean)
+   * @see  PosixFile#mktemp(String, boolean)
    *
    * @deprecated  Please use {@link Files#createTempFile(java.lang.String, java.lang.String, java.nio.file.attribute.FileAttribute...)}.
    */
@@ -1627,7 +1627,7 @@ public class PosixFile {
    *
    * <p>This method will follow symbolic links in the path.</p>
    *
-   * @deprecated  Please use {@link #setGid(int)} instead.
+   * @deprecated  Please use {@link PosixFile#setGid(int)} instead.
    */
   // TODO: Remove in 5.0.0 release
   @Deprecated(forRemoval = true)
@@ -1686,7 +1686,7 @@ public class PosixFile {
    *
    * <p>This method will follow symbolic links in the path.</p>
    *
-   * @deprecated  Please use {@link #setUid(int)} instead.
+   * @deprecated  Please use {@link PosixFile#setUid(int)} instead.
    */
   // TODO: Remove in 5.0.0 release
   @Deprecated(forRemoval = true)
