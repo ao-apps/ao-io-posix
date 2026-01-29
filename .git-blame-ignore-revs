@@ -32,3 +32,6 @@ efab4523d336a38720579c207a15e5d69fb1b29c
 
 # checkstyle-10.23.1 compatibility
 7fe49b907540d3c2eba343cc19a5becf1bb0b95d
+
+# Workaround javadoc reproducibility limitations/bugs
+22f02304c48e761083e60af7b94b47c2d6a7cd56
